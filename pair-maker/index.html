@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>짝 정하기 · Pair Maker</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style id="css">
+/* Layout: one-column classroom tool — attendance chips → group size + shuffle → large group cards (projector-friendly) → pairing history */
+:root{
+  --bg:#f5f6f9; --surface:#ffffff; --fg:#1e2430; --muted:#5f6677; --line:#e1e4ea;
+  --accent:#3d5ca3; --accent-ink:#ffffff; --accent-soft:#e6ecf9;
+  --here:#e2f2e9; --here-ink:#2b6847; --away:#f1f2f5; --away-ink:#8a909c;
+  --warn:#fbf0df; --warn-ink:#875214;
+  --sans:"Noto Sans","Barun Gothic","바른고딕","Noto Sans KR","Apple SD Gothic Neo",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#13161c; --surface:#1b1f27; --fg:#e7e9ee; --muted:#a0a7b4; --line:#2c313b;
+  --accent:#8fa9e6; --accent-ink:#121722; --accent-soft:#232d44;
+  --here:#1d3328; --here-ink:#9ad4b2; --away:#1f232b; --away-ink:#6f7684;
+  --warn:#352918; --warn-ink:#eec48a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#13161c; --surface:#1b1f27; --fg:#e7e9ee; --muted:#a0a7b4; --line:#2c313b;
+  --accent:#8fa9e6; --accent-ink:#121722; --accent-soft:#232d44;
+  --here:#1d3328; --here-ink:#9ad4b2; --away:#1f232b; --away-ink:#6f7684;
+  --warn:#352918; --warn-ink:#eec48a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15.5px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 56px}
+.wrap{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:8px 16px}
+h1{font-size:1.7rem;line-height:1.2;margin:0;font-weight:700;text-wrap:balance}
+header p{margin:2px 0 0;color:var(--muted);font-size:.92rem}
+.status{font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 10px;background:var(--surface)}
+.status.bad{color:var(--warn-ink);background:var(--warn);border-color:transparent}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.row.between{justify-content:space-between}
+h2{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:600}
+.count{font-variant-numeric:tabular-nums;font-weight:600}
+.note{margin:0;font-size:.86rem;color:var(--muted)}
+.example{background:var(--warn);color:var(--warn-ink);border-radius:9px;padding:8px 12px;font-size:.88rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:.95rem;border-radius:999px;padding:6px 14px;cursor:pointer;border:1px solid transparent;background:var(--here);color:var(--here-ink);display:inline-flex;align-items:center;gap:6px}
+.chip::before{content:"✓";font-size:.8em;font-weight:700}
+.chip[aria-pressed="false"]{background:var(--away);color:var(--away-ink);text-decoration:line-through;border-color:var(--line)}
+.chip[aria-pressed="false"]::before{content:"–"}
+button{font:inherit}
+.btn{font-size:.92rem;border-radius:8px;padding:7px 14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.btn.small{font-size:.82rem;padding:4px 10px}
+.btn.danger{color:var(--warn-ink)}
+:is(.btn,.chip,.seg button,summary):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:transparent;color:var(--fg);padding:7px 14px;cursor:pointer;font-size:.92rem}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,13.5rem),1fr));gap:12px}
+.group{border:1px solid var(--line);border-radius:11px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
+.group .label{font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.04em;display:flex;justify-content:space-between;gap:6px}
+.group .names{display:flex;flex-direction:column;gap:2px;font-size:1.3rem;font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+.badge{font-size:.74rem;font-weight:600;border-radius:6px;padding:1px 7px;background:var(--warn);color:var(--warn-ink);align-self:flex-start}
+.empty{color:var(--muted);font-size:.92rem;margin:0}
+.big .groups{grid-template-columns:repeat(auto-fill,minmax(min(100%,18rem),1fr))}
+.big .group .names{font-size:2rem}
+textarea{width:100%;min-height:12rem;font:inherit;font-size:.95rem;border:1px solid var(--line);border-radius:9px;padding:10px 12px;background:var(--bg);color:var(--fg);resize:vertical}
+details summary{cursor:pointer;font-weight:600;font-size:.95rem}
+.hist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+.hist li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.hist time{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.82rem;display:block}
+.confirm{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:var(--warn);color:var(--warn-ink);border-radius:9px;padding:8px 12px;font-size:.9rem}
+html:fullscreen body{overflow:auto}
+.toast{font-size:.86rem;color:var(--here-ink)}
+@media (prefers-reduced-motion:no-preference){.group{animation:pop .22s ease-out both}@keyframes pop{from{transform:translateY(4px)}to{transform:none}}}
+@media (max-width:520px){h1{font-size:1.45rem}.big .group .names{font-size:1.6rem}}
+</style>
+
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<template id="shell">
+  <header>
+    <div>
+      <h1>짝 정하기 · Pair Maker</h1>
+      <p id="classname">명단과 기록은 이 브라우저에만 저장됩니다 · Saved only in this browser</p>
+    </div>
+    <span class="status" id="status">불러오는 중</span>
+  </header>
+
+  <section class="panel" aria-labelledby="att-h">
+    <div class="row between">
+      <h2 id="att-h">오늘 출석</h2>
+      <span class="count" id="count"></span>
+    </div>
+    <p class="example" id="example-note" hidden>지금은 예시 명단입니다. "명단 편집"에서 실제 학생 이름으로 바꾸세요.</p>
+    <p class="note">결석한 학생을 눌러 빼세요. 다시 누르면 출석으로 돌아옵니다.</p>
+    <div class="chips" id="chips"></div>
+    <div class="row">
+      <button class="btn small" id="all-in" type="button">모두 출석</button>
+      <button class="btn small" id="edit-roster" type="button">명단 편집</button>
+    </div>
+    <div id="roster-editor" hidden>
+      <div class="panel" style="padding:12px 14px;background:var(--bg)">
+        <label for="roster-text" class="note">한 줄에 한 명씩 이름을 적으세요. 이름이 같으면 지난 짝 기록이 그대로 이어집니다.</label>
+        <textarea id="roster-text"></textarea>
+        <div class="row">
+          <button class="btn primary small" id="roster-save" type="button">명단 저장</button>
+          <button class="btn small" id="roster-cancel" type="button">취소</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="mk-h" id="result-panel">
+    <div class="row between">
+      <h2 id="mk-h">짝 · 모둠</h2>
+      <div class="seg" role="group" aria-label="모둠 크기" id="sizes">
+        <button type="button" data-size="2">2명 짝</button>
+        <button type="button" data-size="3">3명</button>
+        <button type="button" data-size="4">4명</button>
+      </div>
+    </div>
+    <div class="row">
+      <button class="btn primary" id="shuffle" type="button">새로 섞기</button>
+      <button class="btn" id="record" type="button">이 짝으로 확정</button>
+      <button class="btn" id="bigview" type="button" aria-pressed="false">크게 보기</button>
+      <button class="btn" id="fullscreen" type="button">전체 화면</button>
+      <span class="toast" id="toast" aria-live="polite"></span>
+    </div>
+    <div class="groups" id="groups"></div>
+    <p class="note" id="odd-note"></p>
+    <p class="note">스페이스바를 누르면 새로 섞습니다. "이 짝으로 확정"을 누르면 기록에 남습니다. 다음에 섞을 때는 이미 짝을 했던 학생끼리 다시 만나지 않도록 피하고, 짝이 홀수라 세 명이 된 학생도 돌아가며 정합니다.</p>
+  </section>
+
+  <section class="panel">
+    <details id="hist-wrap">
+      <summary id="hist-sum">짝 기록</summary>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
+        <ul class="hist" id="hist"></ul>
+        <div class="row">
+          <button class="btn small" id="backup-out" type="button">백업 내려받기</button>
+          <label class="btn small" for="backup-in">백업 불러오기</label><input id="backup-in" type="file" accept=".json,application/json" hidden>
+          <button class="btn small danger" id="clear-hist" type="button">기록 모두 지우기</button>
+        </div>
+        <div class="confirm" id="clear-confirm" hidden>
+          <span>짝 기록을 모두 지울까요? 되돌릴 수 없습니다.</span>
+          <button class="btn small" id="clear-yes" type="button">지우기</button>
+          <button class="btn small" id="clear-no" type="button">취소</button>
+        </div>
+      </div>
+    </details>
+  </section>
+</template>
+
+<script id="state" type="application/json">{"v":1,"example":true,"students":[{"id":"s1","name":"학생 1"},{"id":"s2","name":"학생 2"},{"id":"s3","name":"학생 3"},{"id":"s4","name":"학생 4"},{"id":"s5","name":"학생 5"},{"id":"s6","name":"학생 6"},{"id":"s7","name":"학생 7"},{"id":"s8","name":"학생 8"},{"id":"s9","name":"학생 9"},{"id":"s10","name":"학생 10"},{"id":"s11","name":"학생 11"},{"id":"s12","name":"학생 12"}],"history":[],"size":2}</script>
+
+<script id="code">
+(function(){
+  var SHELL=document.getElementById('shell').innerHTML;
+  var state;
+  try{state=JSON.parse(document.getElementById('state').textContent);}catch(e){state={v:1,students:[],history:[],size:2};}
+  if(!state.history)state.history=[];
+  if(!state.size)state.size=2;
+
+  var app=document.getElementById('app');
+  app.innerHTML=SHELL;
+  var $=function(id){return document.getElementById(id);};
+
+  // ---- attendance (per class, kept only in this browser) ----
+  var LS='kct-pairs-absent';
+  var absent={};
+  try{var a=JSON.parse(localStorage.getItem(LS)||'null');if(a&&a.day===today())absent=a.ids||{};}catch(e){}
+  function saveAbsent(){try{localStorage.setItem(LS,JSON.stringify({day:today(),ids:absent}));}catch(e){}}
+  function today(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+  function pad(n){return(n<10?'0':'')+n;}
+  function present(){return state.students.filter(function(s){return !absent[s.id];}).map(function(s){return s.id;});}
+  function nameOf(id){for(var i=0;i<state.students.length;i++)if(state.students[i].id===id)return state.students[i].name;return '(삭제된 학생)';}
+
+  // ---- saving in this browser (standalone file) ----
+  var SK='kct-pairs-state-v1';
+  function setStatus(t,bad){var s=$('status');s.textContent=t;s.className='status'+(bad?' bad':'');}
+  try{var saved=JSON.parse(localStorage.getItem(SK)||'null');if(saved&&saved.students){state=saved;if(!state.history)state.history=[];if(!state.size)state.size=2;}}catch(e){}
+  setStatus('이 컴퓨터 브라우저에 저장');
+  function save(msg){
+    try{localStorage.setItem(SK,JSON.stringify(state));setStatus('저장됨');}catch(e){setStatus('저장하지 못했습니다',true);}
+    toast(msg);
+  }
+  function exportBackup(){
+    var blob=new Blob([JSON.stringify(state,null,1)],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='짝 기록 '+today()+'.json';
+    document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);
+    toast('백업 파일을 내려받았습니다');
+  }
+  function importBackup(file){
+    var r=new FileReader();
+    r.onload=function(){try{var d=JSON.parse(r.result);if(!d.students)throw 0;state=d;if(!state.history)state.history=[];if(!state.size)state.size=2;absent={};saveAbsent();renderAll();save('백업을 불러왔습니다 ('+state.students.length+'명)');}catch(e){toast('이 파일은 짝 기록 백업이 아닙니다');}};
+    r.readAsText(file);
+  }
+  var tt;function toast(t){var el=$('toast');el.textContent=t;clearTimeout(tt);tt=setTimeout(function(){el.textContent='';},2600);}
+
+  // ---- pairing history → cost ----
+  function key(a,b){return a<b?a+'|'+b:b+'|'+a;}
+  function stats(skipLast){
+    var pc={},odd={};
+    (skipLast?state.history.slice(0,-1):state.history).forEach(function(h){
+      var base=h.size||2;
+      h.groups.forEach(function(g){
+        for(var i=0;i<g.length;i++)for(var j=i+1;j<g.length;j++){var k=key(g[i],g[j]);pc[k]=(pc[k]||0)+1;}
+        if(g.length>base)g.forEach(function(id){odd[id]=(odd[id]||0)+1;});
+      });
+    });
+    return{pc:pc,odd:odd};
+  }
+  function shuffled(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function split(ids,size){
+    var n=ids.length;if(n===0)return[];
+    var g=Math.max(1,Math.floor(n/size));
+    var groups=[];for(var i=0;i<g;i++)groups.push([]);
+    for(var k=0;k<n;k++)groups[k<g*size?Math.floor(k/size):(k-g*size)%g].push(ids[k]);
+    return groups;
+  }
+  function cost(groups,st,size){
+    var c=0;
+    groups.forEach(function(g){
+      for(var i=0;i<g.length;i++)for(var j=i+1;j<g.length;j++){var p=st.pc[key(g[i],g[j])]||0;c+=p*p*100;}
+      if(g.length>size)g.forEach(function(id){c+=(st.odd[id]||0)*10;});
+    });
+    return c+Math.random();
+  }
+  function makeGroups(){
+    justRecorded=false;
+    var ids=present(),size=state.size,st=stats(),best=null,bc=Infinity;
+    for(var t=0;t<1500;t++){var gs=split(shuffled(ids),size);var c=cost(gs,st,size);if(c<bc){bc=c;best=gs;}}
+    return best||[];
+  }
+
+  // ---- render ----
+  var current=[],justRecorded=false;
+  function renderChips(){
+    var box=$('chips');box.textContent='';
+    state.students.forEach(function(s){
+      var b=document.createElement('button');b.type='button';b.className='chip';
+      b.setAttribute('aria-pressed',absent[s.id]?'false':'true');
+      b.textContent=s.name;
+      b.title=absent[s.id]?'결석 · 눌러서 출석으로':'출석 · 눌러서 결석으로';
+      b.addEventListener('click',function(){if(absent[s.id])delete absent[s.id];else absent[s.id]=1;saveAbsent();renderChips();current=makeGroups();renderGroups();});
+      box.appendChild(b);
+    });
+    $('count').textContent='출석 '+present().length+' / '+state.students.length+'명';
+    $('example-note').hidden=!state.example;
+  }
+  function renderSizes(){
+    Array.prototype.forEach.call(document.querySelectorAll('#sizes button'),function(b){b.setAttribute('aria-pressed',String(+b.dataset.size===state.size));});
+  }
+  function renderGroups(){
+    var box=$('groups');box.textContent='';
+    var st=stats(justRecorded);
+    if(!current.length){var p=document.createElement('p');p.className='empty';p.textContent='출석한 학생이 없습니다. 위에서 출석을 확인하세요.';box.appendChild(p);$('odd-note').textContent='';return;}
+    var single=current.length===1&&current[0].length===1;
+    current.forEach(function(g,i){
+      var card=document.createElement('div');card.className='group';
+      var lab=document.createElement('div');lab.className='label';
+      var l1=document.createElement('span');l1.textContent=(i+1)+'조';
+      var l2=document.createElement('span');l2.textContent=g.length+'명';
+      lab.appendChild(l1);lab.appendChild(l2);card.appendChild(lab);
+      var nm=document.createElement('div');nm.className='names';
+      g.forEach(function(id){var d=document.createElement('span');d.textContent=nameOf(id);nm.appendChild(d);});
+      card.appendChild(nm);
+      var rep=0;for(var a=0;a<g.length;a++)for(var b=a+1;b<g.length;b++)rep=Math.max(rep,st.pc[key(g[a],g[b])]||0);
+      if(rep>0){var bd=document.createElement('span');bd.className='badge';bd.textContent='전에 같은 조 '+rep+'번';card.appendChild(bd);}
+      box.appendChild(card);
+    });
+    var big=current.filter(function(g){return g.length>state.size;}).length;
+    $('odd-note').textContent=single?'출석한 학생이 한 명이라 짝을 만들 수 없습니다.':(big?'인원이 맞지 않아 '+big+'개 조는 한 명이 더 많습니다.':'');
+  }
+  function renderHistory(){
+    var ul=$('hist');ul.textContent='';
+    $('hist-sum').textContent='짝 기록 ('+state.history.length+'번)';
+    if(!state.history.length){var li=document.createElement('li');var s=document.createElement('span');s.className='empty';s.textContent='아직 확정한 짝이 없습니다.';li.appendChild(s);ul.appendChild(li);}
+    state.history.slice().reverse().forEach(function(h){
+      var li=document.createElement('li');
+      var d=document.createElement('div');
+      var tm=document.createElement('time');tm.textContent=h.at+' · '+(h.size===2?'2명 짝':h.size+'명 모둠');d.appendChild(tm);
+      var t=document.createElement('span');t.textContent=h.groups.map(function(g){return g.map(nameOf).join('·');}).join('  /  ');d.appendChild(t);
+      li.appendChild(d);
+      var del=document.createElement('button');del.type='button';del.className='btn small';del.textContent='삭제';
+      del.addEventListener('click',function(){state.history=state.history.filter(function(x){return x.id!==h.id;});renderHistory();renderGroups();save('기록 하나를 지웠습니다');});
+      li.appendChild(del);ul.appendChild(li);
+    });
+  }
+
+  // ---- events ----
+  $('all-in').addEventListener('click',function(){absent={};saveAbsent();renderChips();current=makeGroups();renderGroups();});
+  Array.prototype.forEach.call(document.querySelectorAll('#sizes button'),function(b){
+    b.addEventListener('click',function(){state.size=+b.dataset.size;renderSizes();current=makeGroups();renderGroups();});
+  });
+  $('shuffle').addEventListener('click',function(){current=makeGroups();renderGroups();});
+  $('record').addEventListener('click',function(){
+    if(!current.length||(current.length===1&&current[0].length<2)){toast('확정할 짝이 없습니다');return;}
+    var d=new Date();
+    state.history.push({id:'h'+Date.now().toString(36),at:today()+' '+pad(d.getHours())+':'+pad(d.getMinutes()),size:state.size,groups:current.map(function(g){return g.slice();})});
+    justRecorded=true;renderHistory();renderGroups();save('확정했습니다. 다음 섞기부터 이 짝은 피합니다');
+  });
+  $('bigview').addEventListener('click',function(){
+    var on=!$('result-panel').classList.contains('big');
+    $('result-panel').classList.toggle('big',on);this.setAttribute('aria-pressed',String(on));
+    if(on)$('result-panel').scrollIntoView({block:'start'});
+  });
+  $('edit-roster').addEventListener('click',function(){
+    $('roster-text').value=state.students.map(function(s){return s.name;}).join('\n');
+    $('roster-editor').hidden=false;$('roster-text').focus();
+  });
+  $('roster-cancel').addEventListener('click',function(){$('roster-editor').hidden=true;});
+  $('roster-save').addEventListener('click',function(){
+    var names=$('roster-text').value.split('\n').map(function(x){return x.trim();}).filter(Boolean);
+    var seen={},byName={};state.students.forEach(function(s){byName[s.name]=s.id;});
+    var next=[];
+    names.forEach(function(n){if(seen[n])return;seen[n]=1;next.push({id:byName[n]||('s'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)),name:n});});
+    var wasExample=state.example;
+    state.students=next;
+    if(wasExample){state.example=false;state.history=[];}
+    var keep={};next.forEach(function(s){keep[s.id]=1;});
+    Object.keys(absent).forEach(function(id){if(!keep[id])delete absent[id];});saveAbsent();
+    $('roster-editor').hidden=true;
+    renderChips();current=makeGroups();renderGroups();renderHistory();
+    save('명단을 저장했습니다 ('+next.length+'명)');
+  });
+  $('clear-hist').addEventListener('click',function(){$('clear-confirm').hidden=false;});
+  $('clear-no').addEventListener('click',function(){$('clear-confirm').hidden=true;});
+  $('clear-yes').addEventListener('click',function(){state.history=[];$('clear-confirm').hidden=true;renderHistory();renderGroups();save('짝 기록을 모두 지웠습니다');});
+
+  function renderAll(){renderChips();renderSizes();current=makeGroups();renderGroups();renderHistory();}
+  $('backup-out').addEventListener('click',exportBackup);
+  $('backup-in').addEventListener('change',function(){if(this.files[0])importBackup(this.files[0]);this.value='';});
+  $('fullscreen').addEventListener('click',function(){
+    var p=$('result-panel');p.classList.add('big');$('bigview').setAttribute('aria-pressed','true');
+    if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){});
+    p.scrollIntoView({block:'start'});
+  });
+  document.addEventListener('keydown',function(e){if(e.target.tagName==='TEXTAREA')return;if(e.key===' '&&e.target===document.body){e.preventDefault();current=makeGroups();renderGroups();}});
+  renderAll();
+})();
+</script>
+
+</body>
+</html>
