@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conjugation Quiz · 활용 연습</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#f6f7f9; --card:#fff; --line:#e6e8ec; --text:#2f3437; --muted:#767d87;
+    --accent:#7d9a86; --accent-soft:#eef3ef;
+    --ok:#3f8f6b; --ok-bg:#ecf6f1; --ok-line:#bfe0d0;
+    --no:#c25c55; --no-bg:#fbeeed; --no-line:#eecac6;
+  }
+  body{font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    background:var(--bg);color:var(--text);min-height:100vh;padding:24px 16px;line-height:1.55}
+  .wrap{max-width:660px;margin:0 auto}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:28px 26px}
+  h1{font-size:1.25rem;font-weight:700;text-align:center;margin-bottom:4px}
+  .sub{text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:24px}
+  .block{margin-bottom:20px}
+  .block-title{font-size:.78rem;font-weight:700;color:var(--muted);letter-spacing:.04em;
+    text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .mini{font-size:.7rem;font-weight:500;background:none;border:1px solid var(--line);border-radius:5px;
+    padding:2px 8px;cursor:pointer;color:var(--muted);font-family:inherit}
+  .mini:hover{border-color:var(--accent);color:var(--accent)}
+  .grid{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 11px;
+    font-size:.84rem;font-family:inherit;color:var(--text);cursor:pointer;transition:.15s;text-align:left}
+  .chip:hover{border-color:var(--accent)}
+  .chip.on{background:var(--accent-soft);border-color:var(--accent);color:#3f5c4a;font-weight:500}
+  .chip .num{color:var(--muted);font-size:.74rem;margin-left:4px}
+  .chip .les{color:var(--muted);font-size:.72rem;margin-right:5px}
+  .seg{display:flex;gap:7px;flex-wrap:wrap}
+  .seg .chip{flex:1;min-width:120px;text-align:center}
+  .info{text-align:center;color:var(--muted);font-size:.85rem;margin:18px 0 14px;min-height:1.3em}
+  .info b{color:var(--accent);font-weight:700}
+  .btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:14px;
+    font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;transition:.15s}
+  .btn:hover:not(:disabled){background:#6d8a76}
+  .btn:disabled{background:#c9cfda;cursor:not-allowed}
+  .btn.ghost{background:#fff;color:var(--muted);border:1px solid var(--line);font-weight:500;margin-top:10px}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent);background:#fff}
+  .bar{background:var(--line);border-radius:3px;height:5px;margin-bottom:8px;overflow:hidden}
+  .fill{background:var(--accent);height:100%;transition:width .35s ease}
+  .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem;margin-bottom:20px}
+  .q{background:var(--accent-soft);border-radius:12px;padding:24px 18px;text-align:center;margin-bottom:18px}
+  .q-stem{font-size:2rem;font-weight:700;color:#3c4f43}
+  .q-mean{color:#5d7566;font-size:.88rem;margin-top:2px}
+  .q-form{display:inline-block;margin-top:12px;background:#fff;border:1px solid #cdddd3;border-radius:7px;
+    padding:5px 13px;font-size:1rem;font-weight:700;color:#3c4f43}
+  .q-type{font-size:.75rem;color:#6f8878;margin-top:9px;min-height:1.1em}
+  .choices{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+  .opt{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 11px;font-size:1.02rem;
+    font-family:inherit;color:var(--text);cursor:pointer;transition:.15s;text-align:center;word-break:keep-all}
+  .opt:hover:not(:disabled){border-color:var(--accent);background:#fafbfa}
+  .opt.ok{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok);font-weight:700}
+  .opt.no{background:var(--no-bg);border-color:var(--no-line);color:var(--no)}
+  .opt:disabled{cursor:default}
+  .typebox{display:flex;gap:8px;margin-bottom:16px}
+  .typebox input{flex:1;padding:14px 14px;font-size:1.05rem;font-family:inherit;border:1px solid var(--line);
+    border-radius:10px;color:var(--text);background:#fff}
+  .typebox input:focus{outline:none;border-color:var(--accent)}
+  .typebox button{padding:0 22px;background:var(--accent);color:#fff;border:none;border-radius:10px;
+    font-family:inherit;font-weight:700;cursor:pointer}
+  .fb{border-radius:10px;padding:14px 16px;margin-bottom:16px;display:none;
+    background:var(--ok-bg);border:1px solid var(--ok-line)}
+  .fb.bad{background:var(--no-bg);border-color:var(--no-line)}
+  .fb-t{font-size:.74rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ok);margin-bottom:5px}
+  .fb.bad .fb-t{color:var(--no)}
+  .fb-m{font-weight:700;margin-bottom:4px}
+  .fb-e{font-size:.88rem;color:var(--muted)}
+  .score{text-align:center;padding:8px 0 4px}
+  .score-n{font-size:3rem;font-weight:700;color:var(--accent);line-height:1}
+  .score-d{color:var(--muted);font-size:.9rem;margin-bottom:14px}
+  .score-m{font-size:1.15rem;font-weight:700;margin-bottom:6px}
+  .score-s{color:var(--muted);font-size:.88rem;margin-bottom:24px}
+  .rev-t{font-size:.9rem;font-weight:700;text-align:left;padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:12px}
+  .rev{background:#fcfcfd;border:1px solid var(--line);border-left:3px solid var(--no-line);
+    border-radius:8px;padding:12px 14px;margin-bottom:8px;text-align:left}
+  .rev-k{font-size:1.02rem;font-weight:700}
+  .rev-e{font-size:.86rem;color:var(--muted);margin-top:3px}
+  .allok{background:var(--ok-bg);border:1px solid var(--ok-line);color:var(--ok);border-radius:10px;
+    padding:14px;font-weight:700;margin-bottom:16px;text-align:center}
+  @media(max-width:480px){.card{padding:22px 18px}.choices{grid-template-columns:1fr}}
+  .meta .nav{display:flex;align-items:center;gap:6px}
+  .meta .nav .mini{font-size:.74rem;padding:3px 9px}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="card">
+
+<div id="s-start">
+  <h1>Conjugation Quiz &middot; 활용 연습</h1>
+  <div class="sub">Choose grammar forms and practise conjugating</div>
+
+  <div class="block">
+    <div class="block-title">Mode</div>
+    <div class="seg" id="modeSeg">
+      <button class="chip on" data-mode="mc">Multiple choice</button>
+      <button class="chip" data-mode="type">Type the answer</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Questions</div>
+    <div class="seg" id="lenSeg">
+      <button class="chip on" data-len="10">10</button>
+      <button class="chip" data-len="20">20</button>
+      <button class="chip" data-len="30">30</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Hint</div>
+    <div class="seg" id="hintSeg">
+      <button class="chip on" data-hint="1">Show conjugation type</button>
+      <button class="chip" data-hint="0">Hide conjugation type</button>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">
+      Grammar forms
+      <button class="mini" id="selAll">Select all</button>
+      <button class="mini" id="selNone">Clear</button>
+    </div>
+    <div class="grid" id="formGrid"></div>
+  </div>
+
+  <div class="info" id="info">Select at least one form to begin.</div>
+  <button class="btn" id="startBtn" disabled>Start quiz</button>
+</div>
+
+<div id="s-quiz" style="display:none">
+  <div class="bar"><div class="fill" id="fill" style="width:0%"></div></div>
+  <div class="meta"><span class="nav"><button class="mini" id="prevBtn" title="Previous question">&larr; Back</button><button class="mini" id="menuBtn" title="Back to the start screen">Menu</button><span id="counter">1 / 10</span></span><span id="running">0 correct</span></div>
+  <div class="q">
+    <div class="q-stem" id="qStem"></div>
+    <div class="q-mean" id="qMean"></div>
+    <div class="q-form" id="qForm"></div>
+    <div class="q-type" id="qType"></div>
+  </div>
+  <div class="choices" id="opts"></div>
+  <div class="typebox" id="typebox" style="display:none">
+    <input id="ansInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="답을 쓰세요">
+    <button id="checkBtn">Check</button>
+  </div>
+  <div class="fb" id="fb">
+    <div class="fb-t" id="fbT"></div>
+    <div class="fb-m" id="fbM"></div>
+    <div class="fb-e" id="fbE"></div>
+  </div>
+  <button class="btn" id="nextBtn" style="display:none">Next</button>
+</div>
+
+<div id="s-done" style="display:none">
+  <div class="score">
+    <div class="score-n" id="sN">0</div>
+    <div class="score-d" id="sD">/ 10</div>
+    <div class="score-m" id="sM"></div>
+    <div class="score-s" id="sS"></div>
+  </div>
+  <div id="revBox"></div>
+  <button class="btn" id="againBtn">Try again</button>
+  <button class="btn ghost" id="backBtn">Change forms</button>
+</div>
+
+</div></div>
+<script src="data.js"></script>
+<script>
+/* 문제 데이터는 data.js에 있습니다. Question data lives in data.js. */
+CONJ = CONJ.filter(function(c){ return c.answer.indexOf("N") !== 0; });
+
+/* ── Hangul helpers ───────────────────────────────────────── */
+var BASE = 0xAC00;
+function dec(ch){
+  var c = ch.charCodeAt(0) - BASE;
+  if (c < 0 || c > 11171) return null;
+  return [Math.floor(c/588), Math.floor((c%588)/28), c%28];
+}
+function comp(a,b,c){ return String.fromCharCode(BASE + a*588 + b*28 + c); }
+function lastSyl(s){ return dec(s.charAt(s.length-1)); }
+function hasFinal(s){ var d = lastSyl(s); return !!(d && d[2] > 0); }
+function isBright(s){
+  for (var i = s.length-1; i >= 0; i--){
+    var d = dec(s.charAt(i)); if (!d) continue;
+    return d[1] === 0 || d[1] === 8;   /* ㅏ, ㅗ */
+  }
+  return false;
+}
+function stemOf(dict){ return dict.replace(/다$/, ""); }
+function stripFinal(s){ var d = lastSyl(s); if (!d) return s; return s.slice(0,-1) + comp(d[0], d[1], 0); }
+function addFinal(s, f){ var d = lastSyl(s); if (!d || d[2]) return null; return s.slice(0,-1) + comp(d[0], d[1], f); }
+
+/* ── plausible wrong forms  ────────────────────────── */
+var EU = {
+  "-(으)세요":       {kind:"eu", bare:"세요"},
+  "-(으)러 가요":     {kind:"eu", bare:"러 가요"},
+  "-(으)니까":        {kind:"eu", bare:"니까"},
+  "-(으)려고 해요":   {kind:"eu", bare:"려고 해요"},
+  "-(으)ㄹ 거예요":   {kind:"eul", jong:8, rest:" 거예요"},
+  "-(으)ㄹ까요?":     {kind:"eul", jong:8, rest:"까요?"},
+  "-(으)ㄴ + N":      {kind:"eul", jong:4, rest:""}
+};
+var AO = {
+  "-아/어요":   ["아요","어요"],
+  "-았/었어요": ["았어요","었어요"],
+  "-아/어서 (reason)":   ["아서","어서"],
+  "-아/어서 (sequence)": ["아서","어서"]
+};
+var SPECIAL = { "먹다|-(으)세요": ["먹세요","먹으세요","드으세요"] };
+function wrongForms(item){
+  var stem = stemOf(item.stem), t = item.type || "", correct = item.answer, out = [];
+  function push(w){ if (w && w !== correct && out.indexOf(w) < 0) out.push(w); }
+  if (SPECIAL[item.stem + "|" + item.form]){ SPECIAL[item.stem + "|" + item.form].forEach(push); return out; }
+  var irr = (t === "ㄷirregular" || t === "ㅂirregular" || t === "ㅎirregular");
+  var fin = hasFinal(stem);
+  var spec = EU[item.form];
+
+  if (spec && spec.kind === "eu"){
+    push(fin ? stem + spec.bare : stem + "으" + spec.bare);       /* 으 dropped / 으 added */
+    if (t === "ㄹdrop"){ push(stem + "으" + spec.bare); push(stripFinal(stem) + spec.bare); }
+    if (irr) push(stem + "으" + spec.bare);                      /* irregular not applied */
+    if (t === "ㄷirregular"){ var dd = addFinal(stripFinal(stem), 8); if (dd) push(dd + spec.bare); }  /* 들러 가요 */
+  } else if (spec){
+    var withEu = stem + (spec.jong === 8 ? "을" : "은");
+    if (spec.jong === 4 && fin){                                 /* -(으)ㄴ + N */
+      push(stem + "은"); push(stem + "는");
+      if (t === "ㄹdrop") push(stem + "은");
+    } else if (fin){
+      push(stem + spec.rest.replace(/^\s+/, " "));             /* 으 dropped (먹 거예요) */
+      push(withEu + spec.rest);
+    } else {
+      push(withEu + spec.rest);                                 /* 으 added to a vowel stem (가을 거예요) */
+      if (spec.jong === 4) push(stem + "는");
+    }
+    var withEul = addFinal(stem, spec.jong);
+    if (withEul) push(withEul + spec.rest);
+    if (t === "ㄹdrop") push(stem + (spec.jong === 8 ? "을" : "은") + spec.rest);
+    if (irr) push(stem + (spec.jong === 8 ? "을" : "은") + spec.rest);
+    if (t === "ㄷirregular"){ var dl = addFinal(stripFinal(stem), 8); if (dl) push(dl + spec.rest); }  /* 들 거예요 */
+  } else if (item.form === "-고 싶어요"){
+    push(stem + "고 싶아요");                                    /* harmony on 싶다 */
+    if (t === "ㄷirregular"){ var d2 = addFinal(stripFinal(stem), 8); if (d2) push(d2 + "고 싶어요"); }  /* 들고 싶어요 */
+    else if (t === "ㄹdrop") push(stripFinal(stem) + "고 싶어요");                                     /* 만드고 */
+    else if (/하$/.test(stem)) push(stem.slice(0,-1) + "해고 싶어요");
+    else if (fin) push(stem + "으고 싶어요");
+    else push(stem + "요 싶어요");
+  } else if (AO[item.form]){
+    var A = AO[item.form][0], E = AO[item.form][1];
+    var bright = isBright(stem);
+    if (/하$/.test(stem)){
+      var pre = stem.slice(0,-1);
+      var HA = { "아요":["하요","하아요","헤요"], "았어요":["하았어요","해어요","했요"], "아서":["하서","하아서","헤서"] }[A];
+      HA.forEach(function(x){ push(pre + x); });
+    } else if (t === "ㅂirregular"){
+      push(stem + (bright ? A : E));                            /* 덥어요 */
+      push(stem + (bright ? E : A));                            /* 덥아요 */
+      push(stripFinal(stem) + "와" + A.slice(1));                /* 더와요 */
+    } else if (t === "ㄷirregular"){
+      push(stem + (bright ? A : E));                            /* 듣어요 */
+      push(stem + (bright ? E : A));
+    } else {
+      push(stem + (bright ? A : E));                            /* no contraction: 오아요, 마시어요 */
+      push(stem + (bright ? E : A));                            /* harmony flipped: 먹아요, 앉어요 */
+      var d = lastSyl(stem);
+      if (d && d[1] === 18 && d[2] === 0){                       /* ㅡ stem: 바쁘다 → 바빠서 */
+        push(stem.slice(0,-1) + comp(d[0], 4, 0) + E.slice(1)); /* 바뻐서 */
+        push(stem.slice(0,-1) + comp(d[0], 0, 0) + A.slice(1)); /* 바빠서 / 커요 alt */
+      }
+    }
+  }
+  return out;
+}
+
+/* ── state ─────────────────────────────────────────────────── */
+var FORMS = [];
+(function(){
+  var seen = {};
+  CONJ.forEach(function(c){
+    var k = c.lesson + "|" + c.form;
+    if (!seen[k]){ seen[k] = {key:k, lesson:c.lesson, form:c.form, n:0}; FORMS.push(seen[k]); }
+    seen[k].n++;
+  });
+  FORMS.sort(function(a,b){ return a.lesson - b.lesson || a.form.localeCompare(b.form); });
+})();
+
+var mode = "mc", qLen = 10, showHint = true, picked = new Set();
+var qs = [], idx = 0, score = 0, missed = [], locked = false;
+
+function $(id){ return document.getElementById(id); }
+function shuffle(a){ a = a.slice(); for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function norm(s){ return String(s).replace(/[\s.?!]/g, ""); }
+
+function buildForms(){
+  var g = $("formGrid");
+  FORMS.forEach(function(f){
+    var b = document.createElement("button");
+    b.className = "chip";
+    b.innerHTML = "<span class='les'>L" + f.lesson + "</span>" + esc(f.form) + "<span class='num'>" + f.n + "</span>";
+    b.onclick = function(){
+      if (picked.has(f.key)){ picked.delete(f.key); b.classList.remove("on"); }
+      else { picked.add(f.key); b.classList.add("on"); }
+      refresh();
+    };
+    b.setAttribute("data-k", f.key);
+    g.appendChild(b);
+  });
+}
+function setAll(on){
+  picked.clear();
+  var bs = document.querySelectorAll("[data-k]");
+  for (var i=0;i<bs.length;i++){
+    if (on){ picked.add(bs[i].getAttribute("data-k")); bs[i].classList.add("on"); }
+    else bs[i].classList.remove("on");
+  }
+  refresh();
+}
+function pool(){ return CONJ.filter(function(c){ return picked.has(c.lesson + "|" + c.form); }); }
+function refresh(){
+  var p = pool();
+  if (!picked.size){ $("info").textContent = "Select at least one form to begin."; $("startBtn").disabled = true; return; }
+  $("info").innerHTML = "<b>" + picked.size + "</b> form" + (picked.size>1?"s":"") + " &middot; <b>" + p.length + "</b> items in the pool";
+  $("startBtn").disabled = false;
+}
+function seg(boxId, attr, cb){
+  var box = $(boxId);
+  box.addEventListener("click", function(e){
+    var b = e.target.closest(".chip"); if (!b) return;
+    var cs = box.querySelectorAll(".chip");
+    for (var i=0;i<cs.length;i++) cs[i].classList.remove("on");
+    b.classList.add("on"); cb(b.getAttribute(attr));
+  });
+}
+
+function build(){
+  var p = pool();
+  var pick = shuffle(p);
+  if (pick.length >= qLen) pick = pick.slice(0, qLen);
+  else { while (pick.length < qLen && p.length) pick = pick.concat(shuffle(p)); pick = pick.slice(0, qLen); }
+  qs = pick.map(function(it){
+    var opts = null;
+    if (mode === "mc"){
+      var w = shuffle(wrongForms(it)).slice(0,2);
+      /* same stem in a different form — tests whether the ending itself is known */
+      if (w.length < 3){
+        var sameStem = shuffle(CONJ.filter(function(c){
+          return c.stem === it.stem && c.answer !== it.answer;
+        }));
+        for (var i=0;i<sameStem.length && w.length<3;i++){
+          var a = sameStem[i].answer;
+          if (w.indexOf(a) < 0) w.push(a);
+        }
+      }
+      /* still short: fall back to the remaining rule-based forms, then other stems */
+      if (w.length < 3){
+        var extra = wrongForms(it);
+        for (var j=0;j<extra.length && w.length<3;j++) if (w.indexOf(extra[j]) < 0) w.push(extra[j]);
+      }
+      if (w.length < 3){
+        var sameForm = shuffle(CONJ.filter(function(c){ return c.form === it.form && c.answer !== it.answer; }));
+        for (var k=0;k<sameForm.length && w.length<3;k++){
+          var b = sameForm[k].answer;
+          if (w.indexOf(b) < 0) w.push(b);
+        }
+      }
+      opts = shuffle([it.answer].concat(w));
+    }
+    return { item: it, opts: opts };
+  });
+}
+function start(){
+  build(); idx = 0; score = 0; missed = []; results = [];
+  $("s-start").style.display = "none"; $("s-done").style.display = "none";
+  $("s-quiz").style.display = "block"; render();
+}
+function render(){
+  results[idx] = undefined; recount();
+  locked = false;
+  var q = qs[idx], it = q.item;
+  $("fill").style.width = (idx / qs.length * 100) + "%";
+  $("counter").textContent = (idx+1) + " / " + qs.length;
+  $("running").textContent = score + " correct";
+  $("qStem").textContent = it.stem;
+  $("qMean").textContent = it.meaning || "";
+  $("qForm").textContent = it.form;
+  $("qType").textContent = showHint ? (it.type ? "Conjugation: " + it.type : "Conjugation: regular") : "";
+  $("fb").style.display = "none"; $("fb").className = "fb";
+  $("nextBtn").style.display = "none";
+  var box = $("opts"), tb = $("typebox");
+  if (mode === "mc"){
+    tb.style.display = "none"; box.style.display = "grid"; box.innerHTML = "";
+    q.opts.forEach(function(o){
+      var b = document.createElement("button");
+      b.className = "opt"; b.textContent = o;
+      b.onclick = function(){ answer(o, b, q); };
+      box.appendChild(b);
+    });
+  } else {
+    box.style.display = "none"; box.innerHTML = "";
+    tb.style.display = "flex";
+    var inp = $("ansInput"); inp.value = ""; inp.disabled = false; inp.focus();
+    $("checkBtn").disabled = false;
+  }
+}
+function answer(choice, btn, q){
+  if (locked) return; locked = true;
+  var good = norm(choice) === norm(q.item.answer);
+  if (mode === "mc"){
+    var bs = $("opts").querySelectorAll(".opt");
+    for (var i=0;i<bs.length;i++){
+      bs[i].disabled = true;
+      if (bs[i].textContent === q.item.answer) bs[i].classList.add("ok");
+      else if (bs[i] === btn && !good) bs[i].classList.add("no");
+    }
+  } else {
+    $("ansInput").disabled = true; $("checkBtn").disabled = true;
+  }
+  results[idx] = { good: good, rec: { item: q.item, given: choice } }; recount();
+  $("running").textContent = score + " correct";
+  var fb = $("fb"); fb.style.display = "block";
+  if (!good) fb.classList.add("bad");
+  $("fbT").textContent = good ? "Correct" : "Not quite";
+  $("fbM").textContent = q.item.stem + " + " + q.item.form + " → " + q.item.answer;
+  var note = "L" + q.item.lesson + (q.item.type ? " · Conjugation: " + q.item.type : " · Conjugation: regular");
+  if (!good && mode === "type" && choice) note = "You wrote: " + choice + "  ·  " + note;
+  $("fbE").textContent = note;
+  var nb = $("nextBtn"); nb.style.display = "block";
+  nb.textContent = idx < qs.length - 1 ? "Next" : "See results";
+  nb.focus();
+}
+function next(){ idx++; if (idx >= qs.length) done(); else render(); }
+function done(){
+  $("s-quiz").style.display = "none"; $("s-done").style.display = "block";
+  $("sN").textContent = score; $("sD").textContent = "/ " + qs.length;
+  var pct = score / qs.length, m, s;
+  if (pct === 1){ m = "Perfect"; s = "Every form correct — well done."; }
+  else if (pct >= .8){ m = "Very good"; s = "Almost there. Check the forms below."; }
+  else if (pct >= .6){ m = "Good work"; s = "Solid. A little more practice will do it."; }
+  else { m = "Keep practising"; s = "Go through the forms below and try again."; }
+  $("sM").textContent = m; $("sS").textContent = s;
+  var box = $("revBox"); box.innerHTML = "";
+  if (!missed.length){ box.innerHTML = "<div class='allok'>All correct</div>"; return; }
+  var t = document.createElement("div");
+  t.className = "rev-t"; t.textContent = "Forms to review (" + missed.length + ")";
+  box.appendChild(t);
+  missed.forEach(function(w){
+    var it = w.item;
+    var d = document.createElement("div"); d.className = "rev";
+    d.innerHTML = "<div class='rev-k'>" + esc(it.stem) + " + " + esc(it.form) + " → " + esc(it.answer) + "</div>" +
+      "<div class='rev-e'>" + esc(it.meaning) + " · L" + it.lesson + (it.type ? " · Conjugation: " + esc(it.type) : " · Conjugation: regular") + "</div>";
+    box.appendChild(d);
+  });
+}
+
+buildForms();
+seg("modeSeg", "data-mode", function(v){ mode = v; });
+seg("lenSeg", "data-len", function(v){ qLen = Number(v); });
+seg("hintSeg", "data-hint", function(v){ showHint = v === "1"; });
+$("selAll").onclick = function(){ setAll(true); };
+$("selNone").onclick = function(){ setAll(false); };
+$("startBtn").onclick = start;
+$("nextBtn").onclick = next;
+$("againBtn").onclick = start;
+$("backBtn").onclick = function(){ $("s-done").style.display="none"; $("s-start").style.display="block"; };
+$("checkBtn").onclick = function(){ if (!locked) answer($("ansInput").value.trim(), null, qs[idx]); };
+$("ansInput").addEventListener("keydown", function(e){
+  if (e.key === "Enter"){ if (!locked) answer($("ansInput").value.trim(), null, qs[idx]); else next(); }
+});
+
+var results = [];
+function recount(){
+  score = 0; missed = [];
+  for (var i=0;i<results.length;i++){ var r = results[i]; if (!r) continue; if (r.good) score++; else missed.push(r.rec); }
+}
+function goBack(){
+  try { if (typeof player !== "undefined") player.pause(); } catch(e){}
+  if (idx === 0){ goMenu(); return; }
+  idx--; render();
+}
+function goMenu(){
+  try { if (typeof player !== "undefined") player.pause(); } catch(e){}
+  $("s-quiz").style.display = "none"; $("s-done").style.display = "none"; $("s-start").style.display = "block";
+}
+$("prevBtn").onclick = goBack;
+$("menuBtn").onclick = goMenu;
+
+/* ── 과 지정·임베드 (2026-11-05): ?lesson=N → 그 과만 골라진 상태, &embed=1 → 과 선택 칸·제목 숨김, 부모 페이지에 높이 알림 ── */
+(function(){
+  var q = location.search, m = q.match(/[?&]lesson=(\d+)/);
+  if (m){
+    var n = m[1], bs = document.querySelectorAll('[data-l="'+n+'"], [data-k^="'+n+'|"]');
+    for (var i=0;i<bs.length;i++) bs[i].click();
+  }
+  if (/[?&]embed=1/.test(q)){
+    var g = document.getElementById("lessonGrid") || document.getElementById("formGrid");
+    if (g && m){ var bl = g.closest(".block"); if (bl) bl.style.display = "none"; }
+    var css = document.createElement("style");
+    css.textContent = "body{padding:0!important;min-height:0!important;background:#fff!important}.wrap{max-width:none!important}.card{border:0!important;padding:4px 2px!important}#s-start>h1,#s-start>.sub{display:none!important}";
+    document.head.appendChild(css);
+    var last = 0;
+    function post(){ var h = document.documentElement.scrollHeight; if (h !== last){ last = h; try { parent.postMessage({quizHeight: h}, "*"); } catch(e){} } }
+    setInterval(post, 300); post();
+  }
+})();
+</script>
+</body>
+</html>
