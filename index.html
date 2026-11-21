@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Korean Classroom Tools · 한국어 수업 도구</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+:root{--bg:#fbfaf7;--fg:#24262b;--muted:#6b6f78;--line:#e6e2da;--card:#fff;--accent:#5b7bb5;--soft:#eef2fa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Noto Sans","Noto Sans KR",system-ui,sans-serif;line-height:1.6}
+main{max-width:760px;margin:0 auto;padding:48px 20px 64px}
+h1{font-size:1.7rem;margin:0 0 4px}
+.lead{color:var(--muted);margin:0 0 32px}
+.tools{display:grid;gap:14px}
+a.tool{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;transition:border-color .15s}
+a.tool:hover,a.tool:focus-visible{border-color:var(--accent);outline:none}
+.tool h2{margin:0 0 4px;font-size:1.1rem}
+.tool p{margin:0;color:var(--muted);font-size:.95rem}
+.tag{display:inline-block;font-size:.75rem;background:var(--soft);color:var(--accent);border-radius:999px;padding:1px 9px;margin-left:6px;vertical-align:middle;font-weight:600}
+section{margin-top:36px;font-size:.95rem}
+section h3{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+  <h1>한국어 수업 도구 · Korean Classroom Tools</h1>
+  <p class="lead">한국어 선생님이 교실에서 바로 쓸 수 있는 작은 웹 도구입니다. 설치나 가입 없이 열어서 쓰세요.<br>
+  Small, free web tools for Korean language classrooms. No sign-up, no installation.</p>
+
+  <div class="tools">
+    <a class="tool" href="pair-maker/">
+      <h2>짝 정하기 · Pair Maker <span class="tag">교사용</span></h2>
+      <p>출석한 학생만 골라 2·3·4명씩 섞습니다. 이미 짝을 했던 학생끼리는 다시 만나지 않게 피합니다.<br>
+      Random pairs and groups that avoid repeating past partners.</p>
+    </a>
+    <a class="tool" href="hangul-quiz/">
+      <h2>한글 퀴즈 · Hangul Quiz <span class="tag">학생용</span></h2>
+      <p>모음, 자음, 받침, 소리 변화를 듣고 고르거나 소리 내어 읽습니다. 음원이 들어 있어 인터넷 없이도 됩니다.<br>
+      Listen-and-choose and read-aloud practice for vowels, consonants and batchim. Works offline.</p>
+    </a>
+    <a class="tool" href="conjugation-quiz/">
+      <h2>활용 연습 · Conjugation Quiz <span class="tag">학생용</span></h2>
+      <p>-아/어요, -았/었어요, -(으)세요 등 문법 형태를 골라 동사·형용사 활용을 연습합니다.<br>
+      Practise conjugating verbs and adjectives with the grammar forms you choose.</p>
+    </a>
+  </div>
+
+  <section>
+    <h3>우리 반에 맞게 바꾸기 · Make it yours</h3>
+    <p>짝 정하기는 화면의 "명단 편집"에서 학생 이름을 넣으면 됩니다. 활용 연습 문제는 <code>conjugation-quiz/data.js</code> 파일 하나만 고치면 바뀝니다. 자세한 방법은 GitHub 저장소의 안내(README)를 보세요.<br>
+    Add your students in Pair Maker with "명단 편집". Change the conjugation questions by editing <code>conjugation-quiz/data.js</code>. See the README on GitHub for details.</p>
+  </section>
+
+  <footer>
+    만든 사람 · Made by Seul Bi Lee (이슬비) · <a href="https://sites.google.com/view/seulbilee">sites.google.com/view/seulbilee</a><br>
+    MIT License — 자유롭게 쓰고, 고치고, 나누세요. Free to use, adapt and share.
+  </footer>
+</main>
+</body>
+</html>
