@@ -21,30 +21,33 @@ Small, free web tools for Korean language classrooms. Each tool is a plain HTML 
 
 - **짝 정하기**: "명단 편집"을 누르고 한 줄에 한 명씩 학생 이름을 적은 뒤 "명단 저장"을 누르세요. 결석한 학생은 이름을 눌러 빼고, "새로 섞기"(또는 스페이스바)로 짝을 정합니다. "이 짝으로 확정"을 누르면 기록에 남고, 다음에는 이미 짝을 했던 학생끼리 피합니다.
 - 명단과 짝 기록은 **그 컴퓨터의 그 브라우저에만** 저장되고 어디로도 보내지지 않습니다. 다른 컴퓨터에서 쓰려면 "백업 내려받기"로 파일을 받아 그 컴퓨터에서 "백업 불러오기"를 하세요.
-- 퀴즈 링크 뒤에 `?lesson=6`을 붙이면 활용 연습이 6과 문법만 골라진 상태로 열립니다.
 
 ### 2. 내려받아 인터넷 없이 쓰기
 GitHub 저장소 페이지에서 초록색 **Code → Download ZIP**을 누르고, 압축을 푼 뒤 각 폴더의 `index.html`을 더블클릭하세요. 한글 퀴즈는 음원이 파일 안에 들어 있어서 인터넷이 없어도 소리가 납니다. (글꼴은 인터넷이 없으면 기본 글꼴로 보입니다.)
 
 ### 3. 우리 반에 맞게 고치기
-**활용 연습 문제 바꾸기** — `conjugation-quiz/data.js` 파일 하나만 고치면 됩니다. 한 줄이 문제 하나입니다.
+**활용 연습 어휘 바꾸기 (코딩 없이, 화면에서)**
+1. 활용 연습을 열고 **Edit words · 어휘 바꾸기**를 누릅니다.
+2. 위의 목록에서 문법 형태(예: `-고 싶어요`)를 고르고, 아래 칸에 한 줄에 한 단어씩 씁니다.
+   ```
+   먹다, 먹고 싶어요, eat
+   듣다, 듣고 싶어요, listen
+   ```
+   `기본형, 정답, 뜻` 순서입니다. 불규칙 활용이면 네 번째 칸에 유형을 쓰면 힌트로 보입니다(예: `듣다, 들어요, listen, ㄷirregular`).
+3. **+ 새 문법 형태**로 `-지만`, `-(으)면` 같은 형태를 더할 수 있고, **이 형태 빼기**로 쓰지 않는 형태를 뺄 수 있습니다.
+4. **저장하고 돌아가기**를 누르면 그 브라우저에서 바로 바뀐 어휘로 연습합니다.
+5. 학생 기기에서도 같은 어휘로 연습하게 하려면 **학생용 링크 복사**를 눌러 링크를 보내세요. 어휘가 링크 안에 들어 있어서 따로 저장할 곳이 필요 없습니다.
+6. 처음 어휘로 돌아가려면 **기본 어휘로 되돌리기**를 누릅니다.
 
-```js
-{ lesson: 6, form: "-아/어요", stem: "먹다", type: "", answer: "먹어요", meaning: "eat" },
-```
+- 객관식 오답은 자동으로 만들어집니다. `-아/어요`, `-았/었어요`, `-(으)세요`, `-(으)ㄹ 거예요` 같은 기본 형태는 그럴듯한 틀린 활용형이 나오고, 새로 더한 형태는 같은 형태의 다른 단어 답이나 같은 단어의 다른 활용형이 오답으로 쓰입니다. 한 형태에 4개 이상 넣으면 보기가 잘 만들어집니다.
 
-- `lesson`: 과 번호(숫자). 화면에서 과별로 묶입니다.
-- `form`: 문법 형태. `-아/어요`, `-았/었어요`, `-(으)세요`, `-(으)ㄹ 거예요`처럼 파일 맨 위에 적힌 형태를 쓰면 그럴듯한 오답이 자동으로 만들어집니다. 다른 형태도 쓸 수 있습니다.
-- `type`: 불규칙 등 활용 유형(힌트로 보임). 규칙 활용이면 `""`.
-- `answer`: 정답, `meaning`: 영어 뜻.
-- 따옴표와 쉼표, 줄 끝의 `},`는 지우지 마세요.
+**내 저장소의 기본 어휘 자체를 바꾸기**
+화면에서 고친 뒤 **data.js 내려받기**를 누르면 지금 어휘가 담긴 `data.js` 파일이 생깁니다. 이 파일로 저장소의 `conjugation-quiz/data.js`를 바꾸면, 링크 없이 열어도 그 어휘가 기본이 됩니다.
 
-**GitHub에서 고치는 방법** (코딩을 몰라도 됩니다)
+**GitHub에서 내 버전 만들기** (코딩을 몰라도 됩니다)
 1. GitHub 계정으로 로그인하고 이 저장소 오른쪽 위의 **Fork**를 누르면 내 계정에 사본이 생깁니다.
-2. 내 사본에서 `conjugation-quiz/data.js`를 열고 연필 아이콘(Edit)을 눌러 고친 뒤 **Commit changes**를 누릅니다.
+2. 내 사본에서 `conjugation-quiz` 폴더를 열고 **Add file → Upload files**로 내려받은 `data.js`를 올린 뒤 **Commit changes**를 누릅니다.
 3. 내 사본의 **Settings → Pages**에서 Branch를 `main`, 폴더를 `/ (root)`로 두고 저장하면 몇 분 뒤 `https://내아이디.github.io/korean-classroom-tools/`에서 내 버전이 열립니다.
-
-GitHub을 쓰지 않는다면 ZIP으로 내려받아 `data.js`를 메모장(Windows)이나 텍스트 편집기(Mac)로 고쳐도 됩니다.
 
 ### 의견 보내기
 고쳤으면 하는 점이나 새 기능 아이디어는 저장소의 **Issues**에 남겨 주세요.
@@ -58,13 +61,12 @@ Open the address above and pick a tool. Project it in class or send the link to 
 
 - **Pair Maker**: click "명단 편집" (edit roster), type one name per line and save. Click absent students to remove them, then shuffle with "새로 섞기" or the space bar. "이 짝으로 확정" saves the pairs so future shuffles avoid repeating partners.
 - The roster and history are stored **only in this browser on this computer** and are never sent anywhere. Use "백업 내려받기" (download backup) and "백업 불러오기" (load backup) to move them to another computer.
-- Add `?lesson=6` to the conjugation quiz link to open it with lesson 6 forms preselected.
 
 ### Use it offline
 On the repository page, click **Code → Download ZIP**, unzip it and double-click `index.html` in any folder. The Hangul quiz has its audio built in, so it works without internet.
 
 ### Adapt it for your class
-Edit `conjugation-quiz/data.js` to change the conjugation questions — one line per question. Field notes are at the top of the file. To publish your own version, **Fork** this repository, edit the file on GitHub, then turn on **Settings → Pages** (branch `main`, folder `/ (root)`).
+In the conjugation quiz, click **Edit words · 어휘 바꾸기**. Pick a grammar form, type one word per line as `dictionary form, answer, meaning` (add a fourth field such as `ㄷirregular` for a hint), add or remove forms, and press **Save**. Saved words stay in that browser. Press **Copy student link** to share the same list with students — the words travel inside the link. **Download data.js** exports your list so you can replace `conjugation-quiz/data.js` in your own fork (**Fork** → upload the file → **Settings → Pages**, branch `main`, folder `/ (root)`).
 
 ### Feedback
 Suggestions and bug reports are welcome in **Issues**.
