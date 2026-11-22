@@ -78,5 +78,12 @@ Seul Bi Lee (이슬비) — Korean language teacher and researcher, based in Cam
 https://sites.google.com/view/seulbilee
 
 ## 라이선스 · License
-MIT License. 자유롭게 쓰고, 고치고, 나눌 수 있습니다. 다시 나눌 때는 `LICENSE` 파일을 함께 두세요.
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (저작자표시-비영리-동일조건변경허락)
+
+- 비영리 목적이라면 자유롭게 쓰고, 고치고, 나눌 수 있습니다.
+- 쓸 때는 만든 사람(Seul Bi Lee, 이슬비)과 라이선스를 밝히고, 고쳤다면 고쳤다고 적어 주세요.
+- 판매하거나 유료 강좌·상품·서비스에 넣는 등 상업적으로 이용할 수 없습니다.
+- 고친 것을 나눌 때는 같은 라이선스로 나누어야 합니다.
+
+Free to use, adapt and share for non-commercial purposes. Credit Seul Bi Lee and link to the licence, mark any changes, do not sell the tools or include them in paid courses, products or services, and share adapted versions under the same licence. See `LICENSE`.
 Free to use, adapt and share; keep the `LICENSE` file when you redistribute.
