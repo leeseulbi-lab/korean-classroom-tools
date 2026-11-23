@@ -4,7 +4,9 @@
 
 Small, free web tools for Korean language classrooms. Each tool is a plain HTML page: open it in a browser — no sign-up, no installation.
 
-**바로 쓰기 · Open the tools:** https://leeseulbi-lab.github.io/korean-classroom-tools/
+**바로 쓰기 · Open the tools · Ouvrir les outils :** https://leeseulbi-lab.github.io/korean-classroom-tools/
+
+**언어 · Languages · Langues:** 한국어 · English · Français — 화면 위의 단추로 바꿉니다. · Switch with the buttons at the top of each page. · [Français ci-dessous](#français).
 
 | 도구 · Tool | 누가 · For | 하는 일 · What it does |
 |---|---|---|
@@ -19,6 +21,7 @@ Small, free web tools for Korean language classrooms. Each tool is a plain HTML 
 ### 1. 링크로 쓰기 (가장 쉬운 방법)
 위 주소를 열고 쓰고 싶은 도구를 누르세요. 교실 화면에 띄우거나 학생에게 링크를 보내면 됩니다.
 
+- **화면 언어**: 각 도구 위쪽의 단추(한국어 · English · Français)로 바꿉니다. 고른 언어는 그 브라우저에 기억됩니다. 주소 끝에 `?lang=fr`(또는 `en`, `ko`)를 붙인 링크를 보내면 처음부터 그 언어로 열립니다. 프랑스어 화면에서는 한글 퀴즈와 활용 연습의 낱말 뜻도 프랑스어로 보입니다. 활용 연습에서 영어나 프랑스어 화면으로 "학생용 링크 복사"를 하면 그 언어가 링크에 함께 들어갑니다.
 - **짝 정하기**: "명단 편집"을 누르고 한 줄에 한 명씩 학생 이름을 적은 뒤 "명단 저장"을 누르세요. 결석한 학생은 이름을 눌러 빼고, "새로 섞기"(또는 스페이스바)로 짝을 정합니다. "이 짝으로 확정"을 누르면 기록에 남고, 다음에는 이미 짝을 했던 학생끼리 피합니다.
 - 명단과 짝 기록은 **그 컴퓨터의 그 브라우저에만** 저장되고 어디로도 보내지지 않습니다. 다른 컴퓨터에서 쓰려면 "백업 내려받기"로 파일을 받아 그 컴퓨터에서 "백업 불러오기"를 하세요.
 
@@ -27,7 +30,7 @@ GitHub 저장소 페이지에서 초록색 **Code → Download ZIP**을 누르�
 
 ### 3. 우리 반에 맞게 고치기
 **활용 연습 어휘 바꾸기 (코딩 없이, 화면에서)**
-1. 활용 연습을 열고 **Edit words · 어휘 바꾸기**를 누릅니다.
+1. 활용 연습을 열고 **어휘 바꾸기**(영어 화면에서는 **Edit words · 어휘 바꾸기**)를 누릅니다.
 2. 위의 목록에서 문법 형태(예: `-고 싶어요`)를 고르고, 아래 칸에 한 줄에 한 단어씩 씁니다.
    ```
    먹다, 먹고 싶어요, eat
@@ -59,8 +62,9 @@ GitHub 저장소 페이지에서 초록색 **Code → Download ZIP**을 누르�
 ### Use it from the link
 Open the address above and pick a tool. Project it in class or send the link to students.
 
-- **Pair Maker**: click "명단 편집" (edit roster), type one name per line and save. Click absent students to remove them, then shuffle with "새로 섞기" or the space bar. "이 짝으로 확정" saves the pairs so future shuffles avoid repeating partners.
-- The roster and history are stored **only in this browser on this computer** and are never sent anywhere. Use "백업 내려받기" (download backup) and "백업 불러오기" (load backup) to move them to another computer.
+- **Language**: use the buttons at the top of each tool (한국어 · English · Français). Your choice is remembered in that browser. A link ending in `?lang=fr` (or `en`, `ko`) opens directly in that language. With the French screen, word meanings in the Hangul Quiz and the Conjugation Quiz are shown in French too. In the Conjugation Quiz, a student link copied from the English or French screen carries that language with it.
+- **Pair Maker**: click **Edit list**, type one name per line and save. Click absent students to remove them, then shuffle with **Shuffle** or the space bar. **Confirm these groups** saves the groups so future shuffles avoid repeating partners.
+- The list and history are stored **only in this browser on this computer** and are never sent anywhere. Use **Download backup** and **Load backup** to move them to another computer.
 
 ### Use it offline
 On the repository page, click **Code → Download ZIP**, unzip it and double-click `index.html` in any folder. The Hangul quiz has its audio built in, so it works without internet.
@@ -73,11 +77,35 @@ Suggestions and bug reports are welcome in **Issues**.
 
 ---
 
-## 만든 사람 · Author
+## Français
+
+De petits outils web gratuits pour la classe de coréen. Chaque outil est une simple page HTML : ouvrez-la dans un navigateur, sans inscription ni installation.
+
+### Utiliser les outils depuis le lien
+Ouvrez l’adresse ci-dessus et choisissez un outil. Projetez-le en classe ou envoyez le lien aux élèves.
+
+- **Langue** : utilisez les boutons en haut de chaque outil (한국어 · English · Français). Votre choix est mémorisé dans ce navigateur. Un lien qui se termine par `?lang=fr` s’ouvre directement en français, par exemple `https://leeseulbi-lab.github.io/korean-classroom-tools/hangul-quiz/?lang=fr`.
+- **Créer des binômes** (pour l’enseignant) : cliquez sur **Modifier la liste**, écrivez un nom par ligne et enregistrez. Cliquez sur les élèves absents pour les retirer, puis mélangez avec **Mélanger** ou la barre d’espace. **Valider ces groupes** enregistre les groupes : les mélanges suivants évitent de réunir les mêmes élèves.
+- La liste et l’historique sont enregistrés **uniquement dans ce navigateur, sur cet ordinateur**, et ne sont envoyés nulle part. **Télécharger une sauvegarde** et **Charger une sauvegarde** permettent de les transférer sur un autre ordinateur.
+- **Quiz de hangeul** (pour les élèves) : lire à voix haute, ou écouter et choisir. Le sens des mots s’affiche en français.
+- **Quiz de conjugaison** (pour les élèves) : choisissez des formes grammaticales, en choix multiple ou en écrivant la réponse. Le sens des mots par défaut s’affiche en français.
+
+### Utiliser les outils hors ligne
+Sur la page du dépôt, cliquez sur **Code → Download ZIP**, décompressez l’archive et double-cliquez sur `index.html` dans le dossier voulu. L’audio du quiz de hangeul est intégré au fichier : il fonctionne sans Internet.
+
+### Adapter à votre classe
+Dans le quiz de conjugaison, cliquez sur **Modifier les mots · 어휘 바꾸기**. Choisissez une forme grammaticale et écrivez un mot par ligne : `forme du dictionnaire, réponse, sens` (un quatrième champ, par exemple `ㄷirregular`, sert d’indice). Vous pouvez ajouter ou retirer des formes, puis cliquer sur **Enregistrer et revenir**. Les mots enregistrés restent dans ce navigateur. **Copier le lien élève** partage la même liste avec les élèves : les mots voyagent dans le lien, qui s’ouvre en français. **Télécharger data.js** exporte votre liste pour remplacer `conjugation-quiz/data.js` dans votre propre copie du dépôt (**Fork** → envoyer le fichier → **Settings → Pages**, branche `main`, dossier `/ (root)`).
+
+### Remarques et suggestions
+Les suggestions et les signalements d’erreurs sont les bienvenus dans **Issues**.
+
+---
+
+## 만든 사람 · Author · Auteure
 Seul Bi Lee (이슬비) — Korean language teacher and researcher, based in Cambridge, UK.
 https://sites.google.com/view/seulbilee
 
-## 라이선스 · License
+## 라이선스 · License · Licence
 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) (저작자표시-비영리-동일조건변경허락)
 
 - 비영리 목적이라면 자유롭게 쓰고, 고치고, 나눌 수 있습니다.
@@ -87,3 +115,5 @@ https://sites.google.com/view/seulbilee
 
 Free to use, adapt and share for non-commercial purposes. Credit Seul Bi Lee and link to the licence, mark any changes, do not sell the tools or include them in paid courses, products or services, and share adapted versions under the same licence. See `LICENSE`.
 Free to use, adapt and share; keep the `LICENSE` file when you redistribute.
+
+Utilisation, adaptation et partage libres à des fins non commerciales. Citez Seul Bi Lee et indiquez la licence, signalez vos modifications, ne vendez pas les outils et ne les intégrez pas à des cours, produits ou services payants, et partagez les versions adaptées sous la même licence. Voir `LICENSE`.

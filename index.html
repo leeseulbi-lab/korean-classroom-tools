@@ -23,42 +23,63 @@ section a{color:var(--accent)}
 section h3{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
 footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
 footer a{color:var(--accent)}
+.lang{display:flex;gap:6px;margin:0 0 18px}
+.lang button{font:inherit;font-size:.8rem;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:2px 12px;cursor:pointer}
+.lang button.on{border-color:var(--accent);color:var(--accent);background:var(--soft);font-weight:600}
 </style>
 </head>
 <body>
 <main>
-  <h1>한국어 수업 도구 · Korean Classroom Tools</h1>
-  <p class="lead">한국어 선생님이 교실에서 바로 쓸 수 있는 작은 웹 도구입니다. 설치나 가입 없이 열어서 쓰세요.<br>
-  Small, free web tools for Korean language classrooms. No sign-up, no installation.</p>
+  <div class="lang" role="group" aria-label="언어 · Language · Langue" id="lang"><button type="button" data-lang="ko" lang="ko">한국어</button><button type="button" data-lang="en" lang="en">English</button><button type="button" data-lang="fr" lang="fr">Français</button></div>
+  <h1 data-i18n="h1"></h1>
+  <p class="lead" data-i18n="lead"></p>
 
   <div class="tools">
     <a class="tool" href="pair-maker/">
-      <h2>짝 정하기 · Pair Maker <span class="tag">교사용</span></h2>
-      <p>출석한 학생만 골라 2·3·4명씩 섞습니다. 이미 짝을 했던 학생끼리는 다시 만나지 않게 피합니다.<br>
-      Random pairs and groups that avoid repeating past partners.</p>
+      <h2><span data-i18n="t1"></span> <span class="tag" data-i18n="teacher"></span></h2>
+      <p data-i18n="t1d"></p>
     </a>
     <a class="tool" href="hangul-quiz/">
-      <h2>한글 퀴즈 · Hangul Quiz <span class="tag">학생용</span></h2>
-      <p>모음, 자음, 받침, 소리 변화를 듣고 고르거나 소리 내어 읽습니다. 음원이 들어 있어 인터넷 없이도 됩니다.<br>
-      Listen-and-choose and read-aloud practice for vowels, consonants and batchim. Works offline.</p>
+      <h2><span data-i18n="t2"></span> <span class="tag" data-i18n="student"></span></h2>
+      <p data-i18n="t2d"></p>
     </a>
     <a class="tool" href="conjugation-quiz/">
-      <h2>활용 연습 · Conjugation Quiz <span class="tag">학생용</span></h2>
-      <p>-아/어요, -았/었어요, -(으)세요 등 문법 형태를 골라 동사·형용사 활용을 연습합니다.<br>
-      Practise conjugating verbs and adjectives with the grammar forms you choose.</p>
+      <h2><span data-i18n="t3"></span> <span class="tag" data-i18n="student"></span></h2>
+      <p data-i18n="t3d"></p>
     </a>
   </div>
 
   <section>
-    <h3>우리 반에 맞게 바꾸기 · Make it yours</h3>
-    <p>짝 정하기는 "명단 편집"에서 학생 이름을 넣으면 됩니다. 활용 연습은 "어휘 바꾸기"에서 문법 형태마다 연습할 어휘를 바꾸고, "학생용 링크 복사"로 학생에게 보낼 수 있습니다. 자세한 방법은 <a href="https://github.com/leeseulbi-lab/korean-classroom-tools">GitHub 저장소의 안내(README)</a>를 보세요.<br>
-    Add your students in Pair Maker with "명단 편집". In the Conjugation Quiz, use "Edit words" to choose the practice words for each form and "Copy student link" to share them. See the <a href="https://github.com/leeseulbi-lab/korean-classroom-tools">README on GitHub</a> for details.</p>
+    <h3 data-i18n="yoursH"></h3>
+    <p data-i18n-html="yours"></p>
   </section>
 
   <footer>
-    만든 사람 · Made by Seul Bi Lee (이슬비) · <a href="https://sites.google.com/view/seulbilee">sites.google.com/view/seulbilee</a><br>
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> — 비영리 목적이라면 출처를 밝히고 자유롭게 쓰고 고칠 수 있습니다. Free to use and adapt for non-commercial purposes, with credit.
+    <span data-i18n="by"></span> · Seul Bi Lee (이슬비) · <a href="https://sites.google.com/view/seulbilee">sites.google.com/view/seulbilee</a><br>
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> — <span data-i18n="lic"></span>
   </footer>
 </main>
+<script>
+/* 언어: 주소의 ?lang= → 이 브라우저에서 마지막으로 고른 언어 → 브라우저 언어(한국어·프랑스어, 그 밖에는 영어)
+   Language: ?lang= → last choice in this browser → browser language (Korean or French, otherwise English) */
+(function(){
+  var I18N = {"ko":{"docTitle":"한국어 수업 도구 · Korean Classroom Tools","h1":"한국어 수업 도구 · Korean Classroom Tools","lead":"한국어 선생님이 교실에서 바로 쓸 수 있는 작은 웹 도구입니다. 설치나 가입 없이 열어서 쓰세요.","t1":"짝 정하기 · Pair Maker","t1d":"출석한 학생만 골라 2·3·4명씩 섞습니다. 이미 짝을 했던 학생끼리는 다시 만나지 않게 피합니다.","t2":"한글 퀴즈 · Hangul Quiz","t2d":"모음, 자음, 받침, 소리 변화를 듣고 고르거나 소리 내어 읽습니다. 음원이 들어 있어 인터넷 없이도 됩니다.","t3":"활용 연습 · Conjugation Quiz","t3d":"-아/어요, -았/었어요, -(으)세요 등 문법 형태를 골라 동사·형용사 활용을 연습합니다.","teacher":"교사용","student":"학생용","yoursH":"우리 반에 맞게 바꾸기","yours":"짝 정하기는 \"명단 편집\"에서 학생 이름을 넣으면 됩니다. 활용 연습은 \"어휘 바꾸기\"에서 문법 형태마다 연습할 어휘를 바꾸고, \"학생용 링크 복사\"로 학생에게 보낼 수 있습니다. 세 도구 모두 화면 위에서 한국어·영어·프랑스어를 고를 수 있습니다. 자세한 방법은 <a href=\"https://github.com/leeseulbi-lab/korean-classroom-tools\">GitHub 저장소의 안내(README)</a>를 보세요.","by":"만든 사람","lic":"비영리 목적이라면 출처를 밝히고 자유롭게 쓰고 고칠 수 있습니다."},"en":{"docTitle":"Korean Classroom Tools · 한국어 수업 도구","h1":"Korean Classroom Tools · 한국어 수업 도구","lead":"Small, free web tools for Korean language classrooms. No sign-up, no installation.","t1":"Pair Maker · 짝 정하기","t1d":"Random pairs and groups of 2, 3 or 4 from the students who are present, avoiding partners who have already worked together.","t2":"Hangul Quiz · 한글 퀴즈","t2d":"Listen-and-choose and read-aloud practice for vowels, consonants, batchim and sound changes. The audio is built in, so it works offline.","t3":"Conjugation Quiz · 활용 연습","t3d":"Practise conjugating verbs and adjectives with the grammar forms you choose, such as -아/어요, -았/었어요 and -(으)세요.","teacher":"For teachers","student":"For students","yoursH":"Make it yours","yours":"Add your students in Pair Maker with \"Edit list\". In the Conjugation Quiz, use \"Edit words\" to choose the practice words for each form and \"Copy student link\" to share them. All three tools can be shown in Korean, English or French from the buttons at the top. See the <a href=\"https://github.com/leeseulbi-lab/korean-classroom-tools\">README on GitHub</a> for details.","by":"Made by","lic":"Free to use and adapt for non-commercial purposes, with credit."},"fr":{"docTitle":"Outils pour la classe de coréen · 한국어 수업 도구","h1":"Outils pour la classe de coréen · 한국어 수업 도구","lead":"De petits outils web gratuits pour la classe de coréen. Sans inscription ni installation.","t1":"Créer des binômes · 짝 정하기","t1d":"Forme au hasard des groupes de 2, 3 ou 4 parmi les élèves présents, en évitant de réunir ceux qui ont déjà travaillé ensemble.","t2":"Quiz de hangeul · 한글 퀴즈","t2d":"Écouter et choisir, ou lire à voix haute : voyelles, consonnes, batchim et changements de sons. L’audio est intégré, le quiz fonctionne donc hors ligne.","t3":"Quiz de conjugaison · 활용 연습","t3d":"Pour s’entraîner à conjuguer verbes et adjectifs avec les formes grammaticales de son choix, comme -아/어요, -았/었어요 ou -(으)세요.","teacher":"Pour les enseignants","student":"Pour les élèves","yoursH":"Adapter à votre classe","yours":"Dans « Créer des binômes », ajoutez vos élèves avec « Modifier la liste ». Dans le quiz de conjugaison, « Modifier les mots » permet de choisir les mots à travailler pour chaque forme et « Copier le lien élève » de les partager. Les trois outils s’affichent en coréen, en anglais ou en français grâce aux boutons en haut de page. Le <a href=\"https://github.com/leeseulbi-lab/korean-classroom-tools\">README sur GitHub</a> donne plus de détails.","by":"Réalisé par","lic":"Utilisation et adaptation libres à des fins non commerciales, avec mention de l’auteure."}};
+  var KEY = "kct-lang", lang = null;
+  try { var q = (location.search.match(/[?&]lang=(ko|en|fr)\b/) || [])[1], s = localStorage.getItem(KEY);
+    if (q) lang = q; else if (I18N[s]) lang = s; } catch(e){}
+  if (!lang){ var n = (navigator.language || "en").slice(0, 2).toLowerCase(); lang = I18N[n] ? n : "en"; }
+  function each(sel, fn){ Array.prototype.forEach.call(document.querySelectorAll(sel), fn); }
+  function apply(){
+    document.documentElement.lang = lang; document.title = I18N[lang].docTitle;
+    each("[data-i18n]", function(el){ el.textContent = I18N[lang][el.getAttribute("data-i18n")]; });
+    each("[data-i18n-html]", function(el){ el.innerHTML = I18N[lang][el.getAttribute("data-i18n-html")]; });
+    each("#lang button", function(b){ b.classList.toggle("on", b.getAttribute("data-lang") === lang); });
+    /* 지금 보이는 언어를 도구에도 그대로 넘긴다 · open the tools in the language shown here */
+    each("a.tool", function(a){ a.href = a.getAttribute("href").split("?")[0] + "?lang=" + lang; });
+  }
+  each("#lang button", function(b){ b.onclick = function(){ lang = b.getAttribute("data-lang"); try { localStorage.setItem(KEY, lang); } catch(e){} apply(); }; });
+  apply();
+})();
+</script>
 </body>
 </html>
