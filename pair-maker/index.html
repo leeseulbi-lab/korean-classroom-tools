@@ -56,6 +56,7 @@ button{font:inherit}
 .seg button{border:0;background:transparent;color:var(--fg);padding:7px 14px;cursor:pointer;font-size:.92rem}
 .seg button+button{border-left:1px solid var(--line)}
 .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.seg.lang button{padding:4px 10px;font-size:.82rem}
 .groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,13.5rem),1fr));gap:12px}
 .group{border:1px solid var(--line);border-radius:11px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
 .group .label{font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.04em;display:flex;justify-content:space-between;gap:6px}
@@ -83,31 +84,38 @@ html:fullscreen body{overflow:auto}
 <template id="shell">
   <header>
     <div>
-      <h1>짝 정하기 · Pair Maker</h1>
-      <p id="classname">명단과 기록은 이 브라우저에만 저장됩니다 · Saved only in this browser</p>
+      <h1 data-i18n="title"></h1>
+      <p id="classname" data-i18n="sub"></p>
     </div>
-    <span class="status" id="status">불러오는 중</span>
+    <div class="row">
+      <div class="seg lang" role="group" aria-label="언어 · Language · Langue" id="lang">
+        <button type="button" data-lang="ko" lang="ko">한국어</button>
+        <button type="button" data-lang="en" lang="en">English</button>
+        <button type="button" data-lang="fr" lang="fr">Français</button>
+      </div>
+      <span class="status" id="status"></span>
+    </div>
   </header>
 
   <section class="panel" aria-labelledby="att-h">
     <div class="row between">
-      <h2 id="att-h">오늘 출석</h2>
+      <h2 id="att-h" data-i18n="attendance"></h2>
       <span class="count" id="count"></span>
     </div>
-    <p class="example" id="example-note" hidden>지금은 예시 명단입니다. "명단 편집"에서 실제 학생 이름으로 바꾸세요.</p>
-    <p class="note">결석한 학생을 눌러 빼세요. 다시 누르면 출석으로 돌아옵니다.</p>
+    <p class="example" id="example-note" data-i18n="exampleNote" hidden></p>
+    <p class="note" data-i18n="absentNote"></p>
     <div class="chips" id="chips"></div>
     <div class="row">
-      <button class="btn small" id="all-in" type="button">모두 출석</button>
-      <button class="btn small" id="edit-roster" type="button">명단 편집</button>
+      <button class="btn small" id="all-in" type="button" data-i18n="allIn"></button>
+      <button class="btn small" id="edit-roster" type="button" data-i18n="editRoster"></button>
     </div>
     <div id="roster-editor" hidden>
       <div class="panel" style="padding:12px 14px;background:var(--bg)">
-        <label for="roster-text" class="note">한 줄에 한 명씩 이름을 적으세요. 이름이 같으면 지난 짝 기록이 그대로 이어집니다.</label>
+        <label for="roster-text" class="note" data-i18n="rosterLabel"></label>
         <textarea id="roster-text"></textarea>
         <div class="row">
-          <button class="btn primary small" id="roster-save" type="button">명단 저장</button>
-          <button class="btn small" id="roster-cancel" type="button">취소</button>
+          <button class="btn primary small" id="roster-save" type="button" data-i18n="rosterSave"></button>
+          <button class="btn small" id="roster-cancel" type="button" data-i18n="cancel"></button>
         </div>
       </div>
     </div>
@@ -115,39 +123,39 @@ html:fullscreen body{overflow:auto}
 
   <section class="panel" aria-labelledby="mk-h" id="result-panel">
     <div class="row between">
-      <h2 id="mk-h">짝 · 모둠</h2>
-      <div class="seg" role="group" aria-label="모둠 크기" id="sizes">
-        <button type="button" data-size="2">2명 짝</button>
-        <button type="button" data-size="3">3명</button>
-        <button type="button" data-size="4">4명</button>
+      <h2 id="mk-h" data-i18n="groupsH"></h2>
+      <div class="seg" role="group" data-i18n-aria="sizeAria" id="sizes">
+        <button type="button" data-size="2" data-i18n="size2"></button>
+        <button type="button" data-size="3" data-i18n="size3"></button>
+        <button type="button" data-size="4" data-i18n="size4"></button>
       </div>
     </div>
     <div class="row">
-      <button class="btn primary" id="shuffle" type="button">새로 섞기</button>
-      <button class="btn" id="record" type="button">이 짝으로 확정</button>
-      <button class="btn" id="bigview" type="button" aria-pressed="false">크게 보기</button>
-      <button class="btn" id="fullscreen" type="button">전체 화면</button>
+      <button class="btn primary" id="shuffle" type="button" data-i18n="shuffle"></button>
+      <button class="btn" id="record" type="button" data-i18n="record"></button>
+      <button class="btn" id="bigview" type="button" aria-pressed="false" data-i18n="big"></button>
+      <button class="btn" id="fullscreen" type="button" data-i18n="fullscreen"></button>
       <span class="toast" id="toast" aria-live="polite"></span>
     </div>
     <div class="groups" id="groups"></div>
     <p class="note" id="odd-note"></p>
-    <p class="note">스페이스바를 누르면 새로 섞습니다. "이 짝으로 확정"을 누르면 기록에 남습니다. 다음에 섞을 때는 이미 짝을 했던 학생끼리 다시 만나지 않도록 피하고, 짝이 홀수라 세 명이 된 학생도 돌아가며 정합니다.</p>
+    <p class="note" data-i18n="help"></p>
   </section>
 
   <section class="panel">
     <details id="hist-wrap">
-      <summary id="hist-sum">짝 기록</summary>
+      <summary id="hist-sum"></summary>
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
         <ul class="hist" id="hist"></ul>
         <div class="row">
-          <button class="btn small" id="backup-out" type="button">백업 내려받기</button>
-          <label class="btn small" for="backup-in">백업 불러오기</label><input id="backup-in" type="file" accept=".json,application/json" hidden>
-          <button class="btn small danger" id="clear-hist" type="button">기록 모두 지우기</button>
+          <button class="btn small" id="backup-out" type="button" data-i18n="backupOut"></button>
+          <label class="btn small" for="backup-in" data-i18n="backupIn"></label><input id="backup-in" type="file" accept=".json,application/json" hidden>
+          <button class="btn small danger" id="clear-hist" type="button" data-i18n="clearHist"></button>
         </div>
         <div class="confirm" id="clear-confirm" hidden>
-          <span>짝 기록을 모두 지울까요? 되돌릴 수 없습니다.</span>
-          <button class="btn small" id="clear-yes" type="button">지우기</button>
-          <button class="btn small" id="clear-no" type="button">취소</button>
+          <span data-i18n="clearQ"></span>
+          <button class="btn small" id="clear-yes" type="button" data-i18n="clearYes"></button>
+          <button class="btn small" id="clear-no" type="button" data-i18n="cancel"></button>
         </div>
       </div>
     </details>
@@ -164,6 +172,19 @@ html:fullscreen body{overflow:auto}
   if(!state.history)state.history=[];
   if(!state.size)state.size=2;
 
+  // ---- languages (한국어 · English · Français) ----
+  var I18N={"ko":{"docTitle":"짝 정하기 · Pair Maker","title":"짝 정하기 · Pair Maker","sub":"명단과 기록은 이 브라우저에만 저장됩니다","attendance":"오늘 출석","exampleNote":"지금은 예시 명단입니다. \"명단 편집\"에서 실제 학생 이름으로 바꾸세요.","absentNote":"결석한 학생을 눌러 빼세요. 다시 누르면 출석으로 돌아옵니다.","allIn":"모두 출석","editRoster":"명단 편집","rosterLabel":"한 줄에 한 명씩 이름을 적으세요. 이름이 같으면 지난 짝 기록이 그대로 이어집니다.","rosterSave":"명단 저장","cancel":"취소","groupsH":"짝 · 모둠","sizeAria":"모둠 크기","size2":"2명 짝","size3":"3명","size4":"4명","shuffle":"새로 섞기","record":"이 짝으로 확정","big":"크게 보기","fullscreen":"전체 화면","help":"스페이스바를 누르면 새로 섞습니다. \"이 짝으로 확정\"을 누르면 기록에 남습니다. 다음에 섞을 때는 이미 짝을 했던 학생끼리 다시 만나지 않도록 피하고, 짝이 홀수라 세 명이 된 학생도 돌아가며 정합니다.","histSum":"짝 기록 ({n}번)","backupOut":"백업 내려받기","backupIn":"백업 불러오기","clearHist":"기록 모두 지우기","clearQ":"짝 기록을 모두 지울까요? 되돌릴 수 없습니다.","clearYes":"지우기","deleted":"(삭제된 학생)","student":"학생","stHere":"이 컴퓨터 브라우저에 저장","stSaved":"저장됨","stFail":"저장하지 못했습니다","backupName":"짝 기록 ","tBackupDone":"백업 파일을 내려받았습니다","tImported":"백업을 불러왔습니다 ({n}명)","tNotBackup":"이 파일은 짝 기록 백업이 아닙니다","chipAbsent":"결석 · 눌러서 출석으로","chipPresent":"출석 · 눌러서 결석으로","count":"출석 {p} / {n}명","noPresent":"출석한 학생이 없습니다. 위에서 출석을 확인하세요.","groupN":"{i}조","nPeople":"{n}명","repeat":"전에 같은 조 {n}번","oneOnly":"출석한 학생이 한 명이라 짝을 만들 수 없습니다.","odd1":"인원이 맞지 않아 {n}개 조는 한 명이 더 많습니다.","oddN":"인원이 맞지 않아 {n}개 조는 한 명이 더 많습니다.","noHist":"아직 확정한 짝이 없습니다.","hist2":"2명 짝","histN":"{n}명 모둠","del":"삭제","tDelOne":"기록 하나를 지웠습니다","tNothing":"확정할 짝이 없습니다","tRecorded":"확정했습니다. 다음 섞기부터 이 짝은 피합니다","tRoster":"명단을 저장했습니다 ({n}명)","tCleared":"짝 기록을 모두 지웠습니다"},"en":{"docTitle":"Pair Maker · 짝 정하기","title":"Pair Maker · 짝 정하기","sub":"The class list and history are saved only in this browser","attendance":"Today's attendance","exampleNote":"This is an example list. Replace it with your students' names under \"Edit list\".","absentNote":"Click a student who is absent to leave them out. Click again to bring them back.","allIn":"All present","editRoster":"Edit list","rosterLabel":"Write one name per line. If a name stays the same, that student's pairing history is kept.","rosterSave":"Save list","cancel":"Cancel","groupsH":"Pairs · Groups","sizeAria":"Group size","size2":"Pairs","size3":"Groups of 3","size4":"Groups of 4","shuffle":"Shuffle","record":"Confirm these groups","big":"Large view","fullscreen":"Full screen","help":"Press the space bar to shuffle again. \"Confirm these groups\" saves them to the history. The next time you shuffle, students who have already worked together are kept apart where possible, and when the numbers are uneven the extra place rotates among students.","histSum":"Pairing history ({n})","backupOut":"Download backup","backupIn":"Load backup","clearHist":"Clear all history","clearQ":"Clear the whole pairing history? This cannot be undone.","clearYes":"Clear","deleted":"(removed student)","student":"Student","stHere":"Saved in this browser","stSaved":"Saved","stFail":"Could not save","backupName":"pairing history ","tBackupDone":"Backup file downloaded","tImported":"Backup loaded ({n} students)","tNotBackup":"This file is not a pairing-history backup","chipAbsent":"Absent · click to mark present","chipPresent":"Present · click to mark absent","count":"Present {p} / {n}","noPresent":"No students are present. Check the attendance above.","groupN":"Group {i}","nPeople":"{n} students","repeat":"Together before ×{n}","oneOnly":"Only one student is present, so no pair can be made.","odd1":"The numbers are uneven, so {n} group has one extra student.","oddN":"The numbers are uneven, so {n} groups have one extra student.","noHist":"No confirmed groups yet.","hist2":"pairs","histN":"groups of {n}","del":"Delete","tDelOne":"One record deleted","tNothing":"There are no groups to confirm","tRecorded":"Confirmed. These pairings will be avoided from the next shuffle","tRoster":"List saved ({n} students)","tCleared":"Pairing history cleared"},"fr":{"docTitle":"Créer des binômes · 짝 정하기","title":"Créer des binômes · 짝 정하기","sub":"La liste et l’historique sont enregistrés uniquement dans ce navigateur","attendance":"Présences du jour","exampleNote":"Ceci est une liste d’exemple. Remplacez-la par les noms de vos élèves dans « Modifier la liste ».","absentNote":"Cliquez sur un élève absent pour le retirer. Cliquez à nouveau pour le remettre.","allIn":"Tous présents","editRoster":"Modifier la liste","rosterLabel":"Écrivez un nom par ligne. Si un nom reste identique, l’historique de cet élève est conservé.","rosterSave":"Enregistrer la liste","cancel":"Annuler","groupsH":"Binômes · Groupes","sizeAria":"Taille des groupes","size2":"Par 2","size3":"Par 3","size4":"Par 4","shuffle":"Mélanger","record":"Valider ces groupes","big":"Affichage agrandi","fullscreen":"Plein écran","help":"Appuyez sur la barre d’espace pour mélanger à nouveau. « Valider ces groupes » les enregistre dans l’historique. Au prochain mélange, les élèves qui ont déjà travaillé ensemble sont séparés autant que possible et, quand le nombre ne tombe pas juste, ce ne sont pas toujours les mêmes élèves qui se retrouvent dans un groupe plus grand.","histSum":"Historique des groupes ({n})","backupOut":"Télécharger une sauvegarde","backupIn":"Charger une sauvegarde","clearHist":"Effacer tout l’historique","clearQ":"Effacer tout l’historique des groupes ? Cette action est irréversible.","clearYes":"Effacer","deleted":"(élève supprimé)","student":"Élève","stHere":"Enregistré dans ce navigateur","stSaved":"Enregistré","stFail":"Échec de l’enregistrement","backupName":"historique des groupes ","tBackupDone":"Fichier de sauvegarde téléchargé","tImported":"Sauvegarde chargée ({n} élèves)","tNotBackup":"Ce fichier n’est pas une sauvegarde de l’historique","chipAbsent":"Absent · cliquez pour marquer présent","chipPresent":"Présent · cliquez pour marquer absent","count":"Présents : {p} / {n}","noPresent":"Aucun élève présent. Vérifiez les présences ci-dessus.","groupN":"Groupe {i}","nPeople":"{n} élèves","repeat":"Déjà ensemble ×{n}","oneOnly":"Un seul élève est présent : impossible de former un binôme.","odd1":"Le nombre ne tombe pas juste : {n} groupe compte un élève de plus.","oddN":"Le nombre ne tombe pas juste : {n} groupes comptent un élève de plus.","noHist":"Aucun groupe validé pour le moment.","hist2":"par 2","histN":"par {n}","del":"Supprimer","tDelOne":"Un enregistrement supprimé","tNothing":"Aucun groupe à valider","tRecorded":"Validé. Ces groupes seront évités dès le prochain mélange","tRoster":"Liste enregistrée ({n} élèves)","tCleared":"Historique des groupes effacé"}};
+  var LK='kct-lang',lang='ko';
+  try{var q=(location.search.match(/[?&]lang=(ko|en|fr)\b/)||[])[1];var sl=localStorage.getItem(LK);if(q)lang=q;else if(I18N[sl])lang=sl;}catch(e){}
+  function t(k,v){var x=I18N[lang][k];if(x==null)x=I18N.ko[k];return v?x.replace(/\{(\w+)\}/g,function(m,n){return v[n];}):x;}
+  function disp(s){var m=state.example&&/^학생 (\d+)$/.exec(s.name);return m?t('student')+' '+m[1]:s.name;}
+  function applyLang(){
+    document.documentElement.lang=lang;document.title=t('docTitle');
+    Array.prototype.forEach.call(document.querySelectorAll('[data-i18n]'),function(el){el.textContent=t(el.getAttribute('data-i18n'));});
+    Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-aria]'),function(el){el.setAttribute('aria-label',t(el.getAttribute('data-i18n-aria')));});
+    Array.prototype.forEach.call(document.querySelectorAll('#lang button'),function(b){b.setAttribute('aria-pressed',String(b.dataset.lang===lang));});
+  }
+
   var app=document.getElementById('app');
   app.innerHTML=SHELL;
   var $=function(id){return document.getElementById(id);};
@@ -176,26 +197,26 @@ html:fullscreen body{overflow:auto}
   function today(){var d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
   function pad(n){return(n<10?'0':'')+n;}
   function present(){return state.students.filter(function(s){return !absent[s.id];}).map(function(s){return s.id;});}
-  function nameOf(id){for(var i=0;i<state.students.length;i++)if(state.students[i].id===id)return state.students[i].name;return '(삭제된 학생)';}
+  function nameOf(id){for(var i=0;i<state.students.length;i++)if(state.students[i].id===id)return disp(state.students[i]);return t('deleted');}
 
   // ---- saving in this browser (standalone file) ----
   var SK='kct-pairs-state-v1';
   function setStatus(t,bad){var s=$('status');s.textContent=t;s.className='status'+(bad?' bad':'');}
   try{var saved=JSON.parse(localStorage.getItem(SK)||'null');if(saved&&saved.students){state=saved;if(!state.history)state.history=[];if(!state.size)state.size=2;}}catch(e){}
-  setStatus('이 컴퓨터 브라우저에 저장');
+  applyLang();setStatus(t('stHere'));
   function save(msg){
-    try{localStorage.setItem(SK,JSON.stringify(state));setStatus('저장됨');}catch(e){setStatus('저장하지 못했습니다',true);}
+    try{localStorage.setItem(SK,JSON.stringify(state));setStatus(t('stSaved'));}catch(e){setStatus(t('stFail'),true);}
     toast(msg);
   }
   function exportBackup(){
     var blob=new Blob([JSON.stringify(state,null,1)],{type:'application/json'});
-    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='짝 기록 '+today()+'.json';
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=t('backupName')+today()+'.json';
     document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},500);
-    toast('백업 파일을 내려받았습니다');
+    toast(t('tBackupDone'));
   }
   function importBackup(file){
     var r=new FileReader();
-    r.onload=function(){try{var d=JSON.parse(r.result);if(!d.students)throw 0;state=d;if(!state.history)state.history=[];if(!state.size)state.size=2;absent={};saveAbsent();renderAll();save('백업을 불러왔습니다 ('+state.students.length+'명)');}catch(e){toast('이 파일은 짝 기록 백업이 아닙니다');}};
+    r.onload=function(){try{var d=JSON.parse(r.result);if(!d.students)throw 0;state=d;if(!state.history)state.history=[];if(!state.size)state.size=2;absent={};saveAbsent();renderAll();save(t('tImported',{n:state.students.length}));}catch(e){toast(t('tNotBackup'));}};
     r.readAsText(file);
   }
   var tt;function toast(t){var el=$('toast');el.textContent=t;clearTimeout(tt);tt=setTimeout(function(){el.textContent='';},2600);}
@@ -243,12 +264,12 @@ html:fullscreen body{overflow:auto}
     state.students.forEach(function(s){
       var b=document.createElement('button');b.type='button';b.className='chip';
       b.setAttribute('aria-pressed',absent[s.id]?'false':'true');
-      b.textContent=s.name;
-      b.title=absent[s.id]?'결석 · 눌러서 출석으로':'출석 · 눌러서 결석으로';
+      b.textContent=disp(s);
+      b.title=absent[s.id]?t('chipAbsent'):t('chipPresent');
       b.addEventListener('click',function(){if(absent[s.id])delete absent[s.id];else absent[s.id]=1;saveAbsent();renderChips();current=makeGroups();renderGroups();});
       box.appendChild(b);
     });
-    $('count').textContent='출석 '+present().length+' / '+state.students.length+'명';
+    $('count').textContent=t('count',{p:present().length,n:state.students.length});
     $('example-note').hidden=!state.example;
   }
   function renderSizes(){
@@ -257,36 +278,36 @@ html:fullscreen body{overflow:auto}
   function renderGroups(){
     var box=$('groups');box.textContent='';
     var st=stats(justRecorded);
-    if(!current.length){var p=document.createElement('p');p.className='empty';p.textContent='출석한 학생이 없습니다. 위에서 출석을 확인하세요.';box.appendChild(p);$('odd-note').textContent='';return;}
+    if(!current.length){var p=document.createElement('p');p.className='empty';p.textContent=t('noPresent');box.appendChild(p);$('odd-note').textContent='';return;}
     var single=current.length===1&&current[0].length===1;
     current.forEach(function(g,i){
       var card=document.createElement('div');card.className='group';
       var lab=document.createElement('div');lab.className='label';
-      var l1=document.createElement('span');l1.textContent=(i+1)+'조';
-      var l2=document.createElement('span');l2.textContent=g.length+'명';
+      var l1=document.createElement('span');l1.textContent=t('groupN',{i:i+1});
+      var l2=document.createElement('span');l2.textContent=t('nPeople',{n:g.length});
       lab.appendChild(l1);lab.appendChild(l2);card.appendChild(lab);
       var nm=document.createElement('div');nm.className='names';
       g.forEach(function(id){var d=document.createElement('span');d.textContent=nameOf(id);nm.appendChild(d);});
       card.appendChild(nm);
       var rep=0;for(var a=0;a<g.length;a++)for(var b=a+1;b<g.length;b++)rep=Math.max(rep,st.pc[key(g[a],g[b])]||0);
-      if(rep>0){var bd=document.createElement('span');bd.className='badge';bd.textContent='전에 같은 조 '+rep+'번';card.appendChild(bd);}
+      if(rep>0){var bd=document.createElement('span');bd.className='badge';bd.textContent=t('repeat',{n:rep});card.appendChild(bd);}
       box.appendChild(card);
     });
     var big=current.filter(function(g){return g.length>state.size;}).length;
-    $('odd-note').textContent=single?'출석한 학생이 한 명이라 짝을 만들 수 없습니다.':(big?'인원이 맞지 않아 '+big+'개 조는 한 명이 더 많습니다.':'');
+    $('odd-note').textContent=single?t('oneOnly'):(big?t(big===1?'odd1':'oddN',{n:big}):'');
   }
   function renderHistory(){
     var ul=$('hist');ul.textContent='';
-    $('hist-sum').textContent='짝 기록 ('+state.history.length+'번)';
-    if(!state.history.length){var li=document.createElement('li');var s=document.createElement('span');s.className='empty';s.textContent='아직 확정한 짝이 없습니다.';li.appendChild(s);ul.appendChild(li);}
+    $('hist-sum').textContent=t('histSum',{n:state.history.length});
+    if(!state.history.length){var li=document.createElement('li');var s=document.createElement('span');s.className='empty';s.textContent=t('noHist');li.appendChild(s);ul.appendChild(li);}
     state.history.slice().reverse().forEach(function(h){
       var li=document.createElement('li');
       var d=document.createElement('div');
-      var tm=document.createElement('time');tm.textContent=h.at+' · '+(h.size===2?'2명 짝':h.size+'명 모둠');d.appendChild(tm);
-      var t=document.createElement('span');t.textContent=h.groups.map(function(g){return g.map(nameOf).join('·');}).join('  /  ');d.appendChild(t);
+      var tm=document.createElement('time');tm.textContent=h.at+' · '+(h.size===2?t('hist2'):t('histN',{n:h.size}));d.appendChild(tm);
+      var sp=document.createElement('span');sp.textContent=h.groups.map(function(g){return g.map(nameOf).join('·');}).join('  /  ');d.appendChild(sp);
       li.appendChild(d);
-      var del=document.createElement('button');del.type='button';del.className='btn small';del.textContent='삭제';
-      del.addEventListener('click',function(){state.history=state.history.filter(function(x){return x.id!==h.id;});renderHistory();renderGroups();save('기록 하나를 지웠습니다');});
+      var del=document.createElement('button');del.type='button';del.className='btn small';del.textContent=t('del');
+      del.addEventListener('click',function(){state.history=state.history.filter(function(x){return x.id!==h.id;});renderHistory();renderGroups();save(t('tDelOne'));});
       li.appendChild(del);ul.appendChild(li);
     });
   }
@@ -298,10 +319,10 @@ html:fullscreen body{overflow:auto}
   });
   $('shuffle').addEventListener('click',function(){current=makeGroups();renderGroups();});
   $('record').addEventListener('click',function(){
-    if(!current.length||(current.length===1&&current[0].length<2)){toast('확정할 짝이 없습니다');return;}
+    if(!current.length||(current.length===1&&current[0].length<2)){toast(t('tNothing'));return;}
     var d=new Date();
     state.history.push({id:'h'+Date.now().toString(36),at:today()+' '+pad(d.getHours())+':'+pad(d.getMinutes()),size:state.size,groups:current.map(function(g){return g.slice();})});
-    justRecorded=true;renderHistory();renderGroups();save('확정했습니다. 다음 섞기부터 이 짝은 피합니다');
+    justRecorded=true;renderHistory();renderGroups();save(t('tRecorded'));
   });
   $('bigview').addEventListener('click',function(){
     var on=!$('result-panel').classList.contains('big');
@@ -309,7 +330,7 @@ html:fullscreen body{overflow:auto}
     if(on)$('result-panel').scrollIntoView({block:'start'});
   });
   $('edit-roster').addEventListener('click',function(){
-    $('roster-text').value=state.students.map(function(s){return s.name;}).join('\n');
+    $('roster-text').value=state.students.map(disp).join('\n');
     $('roster-editor').hidden=false;$('roster-text').focus();
   });
   $('roster-cancel').addEventListener('click',function(){$('roster-editor').hidden=true;});
@@ -325,12 +346,16 @@ html:fullscreen body{overflow:auto}
     Object.keys(absent).forEach(function(id){if(!keep[id])delete absent[id];});saveAbsent();
     $('roster-editor').hidden=true;
     renderChips();current=makeGroups();renderGroups();renderHistory();
-    save('명단을 저장했습니다 ('+next.length+'명)');
+    save(t('tRoster',{n:next.length}));
   });
   $('clear-hist').addEventListener('click',function(){$('clear-confirm').hidden=false;});
   $('clear-no').addEventListener('click',function(){$('clear-confirm').hidden=true;});
-  $('clear-yes').addEventListener('click',function(){state.history=[];$('clear-confirm').hidden=true;renderHistory();renderGroups();save('짝 기록을 모두 지웠습니다');});
+  $('clear-yes').addEventListener('click',function(){state.history=[];$('clear-confirm').hidden=true;renderHistory();renderGroups();save(t('tCleared'));});
 
+  function relabel(){applyLang();setStatus(t('stHere'));renderChips();renderGroups();renderHistory();if(!$('roster-editor').hidden&&state.example)$('roster-text').value=state.students.map(disp).join('\n');}
+  Array.prototype.forEach.call(document.querySelectorAll('#lang button'),function(b){
+    b.addEventListener('click',function(){lang=b.dataset.lang;try{localStorage.setItem(LK,lang);}catch(e){}relabel();});
+  });
   function renderAll(){renderChips();renderSizes();current=makeGroups();renderGroups();renderHistory();}
   $('backup-out').addEventListener('click',exportBackup);
   $('backup-in').addEventListener('change',function(){if(this.files[0])importBackup(this.files[0]);this.value='';});
