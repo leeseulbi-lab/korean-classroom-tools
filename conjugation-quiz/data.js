@@ -13,6 +13,8 @@
     One word: ["dictionary form", "answer", "English meaning", "type (optional)"]
   - 활용 유형 예 · type examples: "ㄹdrop", "으drop", "ㅂirregular", "ㄷirregular", "이/있/없"
   - 따옴표("), 쉼표(,), 대괄호([ ])를 지우지 마세요. Keep the quotes, commas and brackets.
+  - 뜻은 영어로 둡니다. 화면 언어가 프랑스어일 때는 기본 어휘의 뜻이 프랑스어로 바뀌어 보입니다(index.html의 GLOSS 표).
+    Keep meanings in English: with the French screen, the default meanings are shown in French (GLOSS table in index.html).
 */
 var FORMS = [
   { form: "-아/어요", words: [
